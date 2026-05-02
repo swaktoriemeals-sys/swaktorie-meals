@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaktorie | Executive Staff Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===== DESIGN TOKENS (Shared with Hub) ===== */
+        :root {
+            --emerald: #059669;
+            --emerald-dark: #047857;
+            --emerald-light: #ecfdf5;
+            --amber: #f59e0b;
+            --amber-light: #fffbeb;
+            --coral: #ef4444;
+            --coral-light: #fef2f2;
+            --blue: #3b82f6;
+            --blue-light: #eff6ff;
+            --purple: #8b5cf6;
+            --slate: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --white: #ffffff;
+            --bg: #f8fafc;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark-mode {
+            --slate: #e2e8f0;
+            --slate-700: #cbd5e1;
+            --slate-600: #94a3b8;
+            --slate-400: #64748b;
+            --slate-300: #475569;
+            --slate-200: #334155;
+            --slate-100: #1e293b;
+            --white: #0f172a;
+            --bg: #0b1120;
+            --sidebar-bg: #1e293b;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.4);
+            --emerald-light: rgba(5,150,105,0.15);
+            --amber-light: rgba(245,158,11,0.15);
+            --coral-light: rgba(239,68,68,0.15);
+            --blue-light: rgba(59,130,246,0.15);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--slate);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+            transition: background 0.4s;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: width 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--emerald), #10b981);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+            font-weight: 900;
+            font-family: 'Outfit';
+            box-shadow: 0 4px 12px rgba(5,150,105,0.2);
+        }
+
+        .sidebar-brand {
+            font-family: 'Outfit';
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+        .sidebar-brand span { color: var(--emerald); }
+        .sidebar-brand small {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 1.5rem 0.75rem;
+            overflow-y: auto;
+        }
+
+        .nav-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 1rem 0.75rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--slate-600);
+            text-decoration: none;
+            transition: var(--transition);
+            margin-bottom: 0.35rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--slate-100);
+            color: var(--emerald);
+        }
+
+        .nav-item.active {
+            background: var(--emerald-light);
+            color: var(--emerald);
+            border-color: rgba(5,150,105,0.1);
+        }
+
+        .nav-icon {
+            font-size: 1.15rem;
+            width: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        .topbar {
+            height: 64px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+        }
+
+        .page-title {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--slate-700);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-icon-shell {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--slate-100);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-icon-shell:hover { background: var(--slate-200); }
+
+        /* ===== CONTENT AREA ===== */
+        .content-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-content {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        /* ===== NOTIFICATION BADGE ===== */
+        .badge-red {
+            background: var(--coral);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: 50px;
+            margin-left: auto;
+        }
+
+        /* ===== MOBILE OVERLAY ===== */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--emerald);
+            color: white;
+            border-radius: 50%;
+            box-shadow: var(--shadow-lg);
+            border: none;
+            z-index: 2000;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">S</div>
+            <div>
+                <div class="sidebar-brand">Swaktorie <span>Hub</span></div>
+                <small>Executive Portal</small>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-group">
+                <div class="nav-label">Main Operations</div>
+                <div class="nav-item active" onclick="switchTab('orders')">
+                    <span class="nav-icon">🛒</span>
+                    <span>Order Manager</span>
+                    <span class="badge-red" id="orders-badge">0</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('labels')">
+                    <span class="nav-icon">🏷️</span>
+                    <span>Print Labels</span>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">Marketing & Social</div>
+                <div class="nav-item" onclick="switchTab('social-hq')">
+                    <span class="nav-icon">📢</span>
+                    <span>Social HQ</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('manual')">
+                    <span class="nav-icon">📖</span>
+                    <span>Staff Manual</span>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">Planning</div>
+                <div class="nav-item" onclick="switchTab('planner')">
+                    <span class="nav-icon">⚖️</span>
+                    <span>Calorie Planner</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-icon-shell" id="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+            <div style="font-size: 0.7rem; color: var(--slate-400); font-weight: 600;">v2.1 Staff Edition</div>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="main-wrapper">
+        <header class="topbar">
+            <div class="page-title" id="current-tab-title">Order Manager</div>
+            <div class="topbar-actions">
+                <button class="btn-icon-shell" onclick="refreshActiveFrame()" title="Refresh Current Tool">🔄</button>
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--emerald-light); color: var(--emerald); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; border: 2px solid var(--emerald);">A</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <!-- TAB: ORDERS -->
+            <div class="tab-content active" id="tab-orders">
+                <iframe src="https://swaktoriemeals.shop/swaktorie_order_hub.html" id="frame-orders"></iframe>
+            </div>
+
+            <!-- TAB: LABELS -->
+            <div class="tab-content" id="tab-labels">
+                <iframe src="https://swaktoriemeals.shop/swaktorie_printable_labels.html"></iframe>
+            </div>
+
+            <!-- TAB: SOCIAL HQ -->
+            <div class="tab-content" id="tab-social-hq">
+                <iframe src="https://swaktoriemeals.shop/swaktorie_social_dashboard.html"></iframe>
+            </div>
+
+            <!-- TAB: MANUAL -->
+            <div class="tab-content" id="tab-manual">
+                <iframe src="https://swaktoriemeals.shop/social_hq_manual.html"></iframe>
+            </div>
+
+            <!-- TAB: PLANNER -->
+            <div class="tab-content" id="tab-planner">
+                <iframe src="https://swaktoriemeals.shop/staff_calorie_planner.html"></iframe>
+            </div>
+        </div>
+    </main>
+
+    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+
+    <script>
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tabId) {
+            // Update UI
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('onclick').includes(`'${tabId}'`)) {
+                    item.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            // Update title
+            const titles = {
+                'orders': '🛒 Order Manager',
+                'labels': '🏷️ Print Labels',
+                'social-hq': '📢 Social Media HQ',
+                'manual': '📖 Staff Manual',
+                'planner': '⚖️ Calorie Planner'
+            };
+            document.getElementById('current-tab-title').innerText = titles[tabId];
+
+            // Close sidebar on mobile
+            if (window.innerWidth <= 992) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function refreshActiveFrame() {
+            const activeTab = document.querySelector('.tab-content.active');
+            const iframe = activeTab.querySelector('iframe');
+            if (iframe) iframe.contentWindow.location.reload();
+        }
+
+        // ==================== SIDEBAR ====================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // ==================== DARK MODE ====================
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.getElementById('dark-toggle').innerText = isDark ? '☀️' : '🌙';
+            localStorage.setItem('swaktorie_hub_dark', isDark ? '1' : '0');
+
+            // Try to notify iframes
+            document.querySelectorAll('iframe').forEach(frame => {
+                frame.contentWindow.postMessage({ type: 'toggleDarkMode', isDark }, '*');
+            });
+        }
+
+        // ==================== EXTERNAL NOTIFS ====================
+        // Listen for message from Order Hub to update badge
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'updateOrderCount') {
+                const count = event.data.count;
+                const badge = document.getElementById('orders-badge');
+                badge.innerText = count;
+                badge.style.display = count > 0 ? 'inline-block' : 'none';
+            }
+        });
+
+        // ==================== BOOT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+             if (localStorage.getItem('swaktorie_hub_dark') === '1') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('dark-toggle').innerText = '☀️';
+            }
+        });
+    </script>
+</body>
+
+</html>
