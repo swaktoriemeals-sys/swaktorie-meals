@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaktorie | Staff Calorie Planner</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@500;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --emerald: #059669;
+            --emerald-light: #ecfdf5;
+            --slate: #1e293b;
+            --slate-light: #f1f5f9;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text-muted: #64748b;
+        }
+
+        .dark-mode {
+            --slate: #e2e8f0;
+            --slate-light: #1e293b;
+            --white: #1e293b;
+            --border: #334155;
+            --text-muted: #94a3b8;
+            background-color: #0b1120 !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--slate);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            color: var(--slate);
+            letter-spacing: -1px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--emerald-light);
+            color: var(--emerald);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            color: var(--slate);
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 1.2rem;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s;
+            background: var(--slate-light);
+        }
+
+        select:focus,
+        input:focus {
+            border-color: var(--emerald);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .result-card {
+            background: var(--slate-light);
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .result-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--emerald);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .total-banner {
+            background: linear-gradient(135deg, var(--emerald), #10b981);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2);
+        }
+
+        .total-banner h3 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-banner span {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quick-btn {
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--emerald);
+            color: var(--emerald);
+            transform: translateY(-2px);
+        }
+
+        .staff-note {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: #fffbeb;
+            border-radius: 16px;
+            border: 1px solid #fef3c7;
+            color: #92400e;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .total-banner span {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <span class="badge">Internal Staff Tool</span>
+            <h1>Calorie Planning Utility <span style="color: var(--emerald)">.</span></h1>
+        </header>
+
+        <div class="card">
+            <div class="input-group">
+                <label>1. Select Food Category</label>
+                <select id="food-select" onchange="calculate()">
+                    <optgroup label="Proteins (Per kg)">
+                        <option value="1200" data-p="230" data-c="0" data-f="30">Chicken Breast (Raw)</option>
+                        <option value="1600" data-p="180" data-c="0" data-f="100">Chicken Thigh (Raw)</option>
+                        <option value="2500" data-p="260" data-c="0" data-f="150">Lean Ground Beef</option>
+                        <option value="5180" data-p="90" data-c="0" data-f="530">Pork Belly (Liampo)</option>
+                        <option value="2420" data-p="270" data-c="0" data-f="140">Pork Lean Cut</option>
+                        <option value="2630" data-p="180" data-c="0" data-f="210">Ground Pork</option>
+                        <option value="1280" data-p="200" data-c="0" data-f="50">Tilapia / Bangus</option>
+                        <option value="2000" data-p="200" data-c="0" data-f="130">Salmon</option>
+                        <option value="1340" data-p="190" data-c="0" data-f="60">Galunggong (Round Scad)</option>
+                        <option value="990" data-p="210" data-c="0" data-f="3">Shrimp (Raw)</option>
+                        <option value="920" data-p="156" data-c="31" data-f="14">Squid (Raw)</option>
+                        <option value="760" data-p="80" data-c="19" data-f="48">Tofu (Firm)</option>
+                        <option value="1430" data-p="126" data-c="7" data-f="100">Whole Eggs (approx 20pcs)</option>
+                    </optgroup>
+                    <optgroup label="Carbs & Grains (Per kg)">
+                        <option value="1300" data-p="27" data-c="280" data-f="3">White Rice (Cooked)</option>
+                        <option value="1500" data-p="30" data-c="300" data-f="25">Garlic Rice (Cooked)</option>
+                        <option value="1100" data-p="25" data-c="230" data-f="10">Brown Rice (Cooked)</option>
+                        <option value="770" data-p="20" data-c="170" data-f="1">Sweet Potato (Boiled)</option>
+                        <option value="1100" data-p="40" data-c="230" data-f="2">Pasta (Cooked)</option>
+                        <option value="3650" data-p="130" data-c="680" data-f="60">Oatmeal (Dry)</option>
+                        <option value="2650" data-p="80" data-c="490" data-f="30">Pandesal / White Bread</option>
+                    </optgroup>
+                    <optgroup label="Fruits (Per kg)">
+                        <option value="1200" data-p="13" data-c="310" data-f="3">Saba Banana</option>
+                        <option value="900" data-p="11" data-c="230" data-f="3">Lakatan/Latundan Banana</option>
+                        <option value="600" data-p="8" data-c="150" data-f="4">Mango (Ripe)</option>
+                        <option value="500" data-p="5" data-c="130" data-f="1">Pineapple</option>
+                        <option value="1600" data-p="20" data-c="85" data-f="147">Avocado</option>
+                        <option value="430" data-p="5" data-c="110" data-f="3">Papaya</option>
+                        <option value="520" data-p="3" data-c="140" data-f="2">Apple</option>
+                        <option value="320" data-p="7" data-c="80" data-f="3">Watermelon</option>
+                    </optgroup>
+                    <optgroup label="Vegetables (Per kg)">
+                        <option value="250" data-p="13" data-c="58" data-f="1">Cabbage (Raw/Steamed)</option>
+                        <option value="470" data-p="28" data-c="80" data-f="4">Sitaw (Yardlong Beans)</option>
+                        <option value="260" data-p="10" data-c="65" data-f="1">Kalabasa (Squash)</option>
+                        <option value="130" data-p="15" data-c="22" data-f="2">Pechay / Bok Choy</option>
+                        <option value="190" data-p="8" data-c="45" data-f="1">Sayote (Chayote)</option>
+                        <option value="250" data-p="10" data-c="60" data-f="2">Eggplant (Talong)</option>
+                        <option value="310" data-p="18" data-c="70" data-f="2">Baguio Beans</option>
+                        <option value="340" data-p="28" data-c="66" data-f="4">Broccoli</option>
+                        <option value="200" data-p="10" data-c="40" data-f="2">Cauliflower</option>
+                        <option value="410" data-p="9" data-c="100" data-f="2">Carrots</option>
+                        <option value="180" data-p="9" data-c="39" data-f="2">Tomato</option>
+                    </optgroup>
+                    <optgroup label="Condiments & Oils (Per kg)">
+                        <option value="8620" data-p="0" data-c="0" data-f="1000">Coconut Oil</option>
+                        <option value="8840" data-p="0" data-c="0" data-f="1000">Olive Oil/Canola</option>
+                        <option value="7170" data-p="9" data-c="1" data-f="810">Butter</option>
+                        <option value="3040" data-p="3" data-c="820" data-f="0">Honey</option>
+                        <option value="4000" data-p="0" data-c="1000" data-f="0">White Sugar</option>
+                        <option value="530" data-p="80" data-c="50" data-f="0">Soy Sauce (Toyo)</option>
+                        <option value="350" data-p="50" data-c="40" data-f="0">Fish Sauce (Patis)</option>
+                        <option value="180" data-p="0" data-c="40" data-f="0">Vinegar (Suka)</option>
+                        <option value="6800" data-p="10" data-c="10" data-f="750">Mayonnaise</option>
+                        <option value="4030" data-p="250" data-c="13" data-f="330">Cheddar Cheese</option>
+                        <option value="940" data-p="12" data-c="220" data-f="1">Ketchup</option>
+                    </optgroup>
+                </select>
+
+                <div class="quick-grid">
+                    <button class="quick-btn" onclick="setFood(0)">Cabbage</button>
+                    <button class="quick-btn" onclick="setFood(1)">Chicken</button>
+                    <button class="quick-btn" onclick="setFood(2)">Beef</button>
+                    <button class="quick-btn" onclick="setFood(3)">Rice</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>2. Weighing (Scale reading in KG)</label>
+                <div style="position: relative;">
+                    <input type="number" id="weight-kg" step="0.01" placeholder="0.00" oninput="calculate()">
+                    <span
+                        style="position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--text-muted);">KG</span>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Example: 0.15 for 150g or
+                    0.5 for 500g</p>
+            </div>
+
+            <div class="total-banner">
+                <h3>Total Estimated Calories</h3>
+                <span id="total-kcal">0</span> <small style="font-size: 1rem;">kcal</small>
+            </div>
+
+            <div class="result-grid">
+                <div class="result-card">
+                    <span class="result-label">Protein</span>
+                    <span class="result-value" id="res-p" style="color: #ef4444;">0g</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Carbs</span>
+                    <span class="result-value" id="res-c" style="color: #3b82f6;">0g</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Fats</span>
+                    <span class="result-value" id="res-f" style="color: #f59e0b;">0g</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Grams</span>
+                    <span class="result-value" id="res-g" style="color: var(--slate);">0g</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="staff-note">
+            <div style="font-size: 1.5rem;">⚠️</div>
+            <div>
+                <strong>Staff Note:</strong> Values are based on standard nutritional density per kilogram. Ensure the
+                scale is tared (zeroed) with the container before weighing. For mixed stir-fries, weigh ingredients
+                separately before combining for highest accuracy.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quickIndexes = [10, 0, 2, 6]; // Mapping index of items in select
+
+        function setFood(qIdx) {
+            const select = document.getElementById('food-select');
+            // Manual search for clarity in case options reorder
+            const labels = ["Cabbage", "Chicken Breast", "Lean Ground Beef", "White Rice"];
+            const target = labels[qIdx];
+
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].text.includes(target)) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+            calculate();
+        }
+
+        function calculate() {
+            const select = document.getElementById('food-select');
+            const kg = parseFloat(document.getElementById('weight-kg').value) || 0;
+
+            const kcalPerKg = parseFloat(select.value);
+            const pPerKg = parseFloat(select.options[select.selectedIndex].dataset.p);
+            const cPerKg = parseFloat(select.options[select.selectedIndex].dataset.c);
+            const fPerKg = parseFloat(select.options[select.selectedIndex].dataset.f);
+
+            const totalKcal = Math.round(kcalPerKg * kg);
+            const totalP = Math.round(pPerKg * kg);
+            const totalC = Math.round(cPerKg * kg);
+            const totalF = Math.round(fPerKg * kg);
+            const totalG = Math.round(kg * 1000);
+
+            document.getElementById('total-kcal').innerText = totalKcal.toLocaleString();
+            document.getElementById('res-p').innerText = totalP + 'g';
+            document.getElementById('res-c').innerText = totalC + 'g';
+            document.getElementById('res-f').innerText = totalF + 'g';
+            document.getElementById('res-g').innerText = totalG + 'g';
+
+            // Animation effect on result cards
+            if (kg > 0) {
+                document.querySelectorAll('.result-card').forEach(card => {
+                    card.style.transform = 'scale(1.02)';
+                    setTimeout(() => card.style.transform = 'scale(1)', 100);
+                });
+            }
+        }
+
+        // Listen for message from Parent Hub
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'toggleDarkMode') {
+                if (event.data.isDark) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

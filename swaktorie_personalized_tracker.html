@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Personalized Progress Tracker | Swaktorie Meals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --emerald: #059669;
+            --emerald-light: #ecfdf5;
+            --emerald-dark: #047857;
+            --slate: #0f172a;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.9);
+            --border-light: rgba(5, 150, 105, 0.1);
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow-premium: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: var(--slate);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 60% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(5,150,105,0.15), rgba(16,185,129,0.05));
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(5,150,105,0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: #34d399;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: inline-block;
+            background: rgba(5,150,105,0.15);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            color: #f1f5f9;
+        }
+
+        .welcome-msg {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card .card-title { color: #f1f5f9; }
+        .glass-card label { color: #94a3b8 !important; }
+        .glass-card h4 { color: #f1f5f9; }
+        .glass-card select, .glass-card input { background: rgba(15,23,42,0.6); color: #f1f5f9; border-color: rgba(255,255,255,0.1); }
+        .glass-card select:focus, .glass-card input:focus { border-color: var(--emerald); }
+        .scale-tool { background: rgba(15,23,42,0.4); }
+        .scale-tool p { color: #64748b !important; }
+
+        /* Status Section */
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Scale Tool Enhancements */
+        .scale-tool {
+            background: #f1f5f9;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-family: inherit;
+            font-size: 1rem;
+            background: white;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        select:focus, input:focus { border-color: var(--emerald); box-shadow: 0 0 0 4px rgba(5,150,105,0.1); }
+
+        .btn-primary {
+            background: var(--emerald);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .btn-primary:hover { background: var(--emerald-dark); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(5,150,105,0.2); }
+
+        /* Rings */
+        .ring-set {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .ring-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .ring-label .big-num { font-size: 3rem; font-family: 'Outfit'; font-weight: 800; color: var(--slate); line-height: 1; }
+        .ring-label .small-text { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-top: 0.25rem; }
+
+        /* NEW CALENDAR DESIGN */
+        .calendar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .week-card {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: 0.3s;
+        }
+
+        .week-card:nth-child(1) { border-left: 3px solid #10b981; }
+        .week-card:nth-child(2) { border-left: 3px solid #3b82f6; }
+        .week-card:nth-child(3) { border-left: 3px solid #f59e0b; }
+        .week-card:nth-child(4) { border-left: 3px solid #ef4444; }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .week-title { font-family: 'Outfit'; font-weight: 700; color: var(--emerald); font-size: 1.1rem; }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 1200px) { .days-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } }
+
+        .day-block {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .day-block:hover {
+            border-color: rgba(5,150,105,0.2);
+            transform: translateY(-2px);
+        }
+
+        .day-block.completed { background: #ecfdf5; border-color: var(--emerald); }
+
+        .day-name { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
+        .day-num { font-family: 'Outfit'; font-size: 1.5rem; font-weight: 800; margin-bottom: 1rem; display: block; color: #e2e8f0; }
+
+        /* Meal Toggle Buttons */
+        .meal-toggles { display: flex; flex-direction: column; gap: 0.4rem; }
+        
+        .meal-btn {
+            background: rgba(15,23,42,0.6);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 0.45rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            text-align: left;
+        }
+
+        .meal-btn:hover { border-color: rgba(255,255,255,0.15); background: rgba(30,41,59,0.8); }
+
+        .meal-btn.active { box-shadow: 0 4px 10px rgba(0,0,0,0.06); border-color: transparent; }
+
+        /* Custom Colors for Meal Types */
+        .meal-btn[data-type="breakfast"].active { background: #fef3c7; color: #d97706; }
+        .meal-btn[data-type="lunch"].active { background: #dcfce7; color: #15803d; }
+        .meal-btn[data-type="snack"].active { background: #f3e8ff; color: #7e22ce; }
+        .meal-btn[data-type="dinner"].active { background: #e0f2fe; color: #0369a1; }
+
+        .meal-btn::before { content: '○'; font-size: 0.9rem; color: #cbd5e1; }
+        .meal-btn.active::before { content: '✓'; color: currentColor; }
+
+        .day-block.completed { background: linear-gradient(145deg, rgba(5,150,105,0.2), rgba(16,185,129,0.1)); border-color: var(--emerald); box-shadow: 0 4px 20px rgba(5,150,105,0.15); transform: translateY(-3px); }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--emerald), #10b981, #34d399);
+            width: 0%;
+            transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 0 15px rgba(5,150,105,0.4);
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--slate);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .toast.active { transform: translateX(-50%) translateY(0); }
+
+        .ring-svg { transform: rotate(-90deg); }
+        .ring-circle-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 14; }
+        .ring-circle { fill: none; stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+
+        .ring-label .big-num { color: #f1f5f9; }
+        .ring-label .small-text { color: #94a3b8; }
+
+        .status-header .card-title { color: #f1f5f9; }
+
+        /* ===== MOBILE RESPONSIVENESS ===== */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden !important;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                padding: 2rem 1.2rem;
+                margin-bottom: 2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: -1px;
+            }
+
+            .welcome-msg {
+                font-size: 0.95rem;
+            }
+
+            .logo-text {
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            /* Smaller macro rings */
+            .ring-set svg {
+                width: 200px;
+                height: 200px;
+            }
+            .ring-set svg circle.ring-circle-bg,
+            .ring-set svg circle.ring-circle {
+                stroke-width: 10;
+            }
+
+            .ring-label .big-num {
+                font-size: 2.2rem;
+            }
+
+            /* Days grid: 2 columns on mobile */
+            .days-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.8rem;
+            }
+
+            .day-block {
+                padding: 0.8rem;
+                border-radius: 12px;
+            }
+
+            .day-num {
+                font-size: 1.2rem !important;
+                margin-bottom: 0.6rem !important;
+            }
+
+            .day-name {
+                font-size: 0.65rem !important;
+            }
+
+            .meal-btn {
+                font-size: 0.65rem;
+                padding: 0.35rem;
+            }
+
+            .week-card {
+                padding: 1rem;
+            }
+
+            .week-title {
+                font-size: 0.95rem;
+            }
+
+            .status-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .status-header > div {
+                text-align: center !important;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+                justify-content: center;
+            }
+
+            .scale-tool {
+                padding: 1rem;
+            }
+
+            .progress-stats {
+                font-size: 0.8rem;
+            }
+
+            footer {
+                margin-top: 3rem !important;
+                font-size: 0.8rem !important;
+            }
+        }
+
+        /* Extra small phones */
+        @media (max-width: 380px) {
+            .days-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .ring-set svg {
+                width: 160px;
+                height: 160px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="logo-text">Premium Post-Purchase Portal</span>
+            <h1 id="welcome-title">Your Swaktorie Journey</h1>
+            <p class="welcome-msg">Welcome back, <span id="user-name" style="color: var(--emerald);">Customer</span>! Stay fueled, stay Swakto.</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- LEFT: Macro Hub -->
+            <div class="glass-card">
+                <div class="card-title" style="margin-bottom: 2rem;"><span>📊</span> Daily Fueling</div>
+                
+                <div class="ring-set">
+                    <svg class="ring-svg" width="280" height="280">
+                        <!-- Protein Ring -->
+                        <circle class="ring-circle-bg" cx="140" cy="140" r="120" />
+                        <circle id="circle-p" class="ring-circle" cx="140" cy="140" r="120" stroke="#ef4444" stroke-dasharray="754" stroke-dashoffset="754" />
+                        
+                        <!-- Carbs Ring -->
+                        <circle class="ring-circle-bg" cx="140" cy="140" r="95" />
+                        <circle id="circle-c" class="ring-circle" cx="140" cy="140" r="95" stroke="#3b82f6" stroke-dasharray="596" stroke-dashoffset="596" />
+                        
+                        <!-- Fats Ring -->
+                        <circle class="ring-circle-bg" cx="140" cy="140" r="70" />
+                        <circle id="circle-f" class="ring-circle" cx="140" cy="140" r="70" stroke="#f59e0b" stroke-dasharray="440" stroke-dashoffset="440" />
+                    </svg>
+                    <div class="ring-label">
+                        <div class="big-num" id="current-kcal">0</div>
+                        <div class="small-text">of <span id="target-kcal">2000</span> Kcal</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2.5rem; text-align: center;">
+                    <div><div style="font-weight: 800; color: #ef4444;" id="val-p">0g</div><div style="font-size: 0.65rem; color:#94a3b8; font-weight:700;">PRO</div></div>
+                    <div><div style="font-weight: 800; color: #3b82f6;" id="val-c">0g</div><div style="font-size: 0.65rem; color:#94a3b8; font-weight:700;">CARB</div></div>
+                    <div><div style="font-weight: 800; color: #f59e0b;" id="val-f">0g</div><div style="font-size: 0.65rem; color:#94a3b8; font-weight:700;">FAT</div></div>
+                </div>
+
+                <div class="scale-tool">
+                    <h4 style="margin-bottom: 1rem; font-family:'Outfit'; font-size: 1rem;">⚖️ Scale Log Helper</h4>
+                    <div class="form-group">
+                        <label>Select Item</label>
+                        <select id="food-select">
+                            <option value="1300" data-p="27" data-c="280" data-f="3">White Rice (Cooked)</option>
+                            <option value="1200" data-p="230" data-c="0" data-f="30">Chicken Breast (Raw)</option>
+                            <option value="2500" data-p="260" data-c="0" data-f="150">Lean Ground Beef</option>
+                            <option value="760" data-p="80" data-c="19" data-f="48">Tofu (Firm)</option>
+                            <option value="1200" data-p="13" data-c="310" data-f="3">Saba Banana</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (KG)</label>
+                        <input type="number" id="food-weight" step="0.01" placeholder="e.g. 0.35">
+                    </div>
+                    <button class="btn-primary" onclick="logMeal()">Log To Daily Ring</button>
+                    <p style="font-size: 0.75rem; color: #94a3b8; text-align: center; margin-top: 1rem;">Log from your kitchen scale for precision.</p>
+                </div>
+            </div>
+
+            <!-- RIGHT: 4-Week Prep Calendar -->
+            <div class="glass-card">
+                <div class="status-header">
+                    <div class="card-title"><span>📅</span> 4-Week Prep Tracker</div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 0.8rem; font-weight: 800; color: var(--emerald); display: block;" id="global-progress-text">0/56 MEALS</span>
+                    </div>
+                </div>
+
+                <div class="calendar-section" id="calendar-container"></div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="cal-progress-fill"></div>
+                </div>
+                <div class="progress-stats">
+                    <span>Overall Consistency</span>
+                    <span id="overall-percentage">0%</span>
+                </div>
+            </div>
+        </div>
+        
+        <footer style="text-align: center; margin-top: 5rem; padding-bottom: 3rem; color: #64748b; font-size: 0.9rem;">
+            &copy; 2025 Swaktorie Meals. Your personalized tracker. Reset every 28 days for a fresh start.
+        </footer>
+    </div>
+
+    <div id="toast" class="toast">Action Logged!</div>
+
+    <script>
+        // Data from URL Params
+        const urlParams = new URLSearchParams(window.location.search);
+        const nameParam = urlParams.get('name') || "Valued Customer";
+        const tdeeParam = parseInt(urlParams.get('tdee')) || 2000;
+        
+        document.getElementById('user-name').innerText = nameParam;
+        document.getElementById('target-kcal').innerText = tdeeParam;
+
+        // Reactive State
+        let macros = { p: 0, c: 0, f: 0 };
+        const targets = {
+            p: Math.floor(tdeeParam * 0.3 / 4),
+            c: Math.floor(tdeeParam * 0.45 / 4),
+            f: Math.floor(tdeeParam * 0.25 / 9)
+        };
+
+        const totalExpectedMeals = 112; // Breakfast + Lunch + Snack + Dinner for 28 days
+
+        // Initialize Calendar
+        function initCalendar() {
+            const container = document.getElementById('calendar-container');
+            const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+            for(let w=1; w<=4; w++) {
+                const weekCard = document.createElement('div');
+                weekCard.className = 'week-card';
+                weekCard.innerHTML = `<div class="week-header"><span class="week-title">WEEK ${w} CYCLE</span></div>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'days-grid';
+
+                for(let d=1; d<=7; d++) {
+                    const dayNum = (w-1)*7 + d;
+                    const dayBlock = document.createElement('div');
+                    dayBlock.className = 'day-block';
+                    dayBlock.setAttribute('data-day', dayNum);
+                    
+                    dayBlock.innerHTML = `
+                        <span class="day-name">${dayNames[d-1]}</span>
+                        <span class="day-num">${dayNum}</span>
+                        <div class="meal-toggles">
+                            <button class="meal-btn" data-type="breakfast" onclick="toggleMeal(this, ${dayNum})">🍳 Breakfast</button>
+                            <button class="meal-btn" data-type="lunch" onclick="toggleMeal(this, ${dayNum})">🥗 Lunch</button>
+                            <button class="meal-btn" data-type="snack" onclick="toggleMeal(this, ${dayNum})">🍎 Snack</button>
+                            <button class="meal-btn" data-type="dinner" onclick="toggleMeal(this, ${dayNum})">🥩 Dinner</button>
+                        </div>
+                    `;
+                    grid.appendChild(dayBlock);
+                }
+                weekCard.appendChild(grid);
+                container.appendChild(weekCard);
+            }
+        }
+
+        function toggleMeal(btn, day) {
+            btn.classList.toggle('active');
+            
+            const block = btn.closest('.day-block');
+            const allBtns = block.querySelectorAll('.meal-btn');
+            const allActive = Array.from(allBtns).every(b => b.classList.contains('active'));
+
+            if(allActive) {
+                if(!block.classList.contains('completed')) {
+                    block.classList.add('completed');
+                    showToast(`Day ${day} Completed! ✨`);
+                }
+            } else {
+                block.classList.remove('completed');
+            }
+            
+            updateCalendarProgress();
+        }
+
+        function updateCalendarProgress() {
+            const activeMeals = document.querySelectorAll('.meal-btn.active').length;
+            const perc = Math.round((activeMeals / totalExpectedMeals) * 100);
+            
+            document.getElementById('cal-progress-fill').style.width = perc + '%';
+            document.getElementById('overall-percentage').innerText = perc + '%';
+            document.getElementById('global-progress-text').innerText = `${activeMeals}/${totalExpectedMeals} MEALS COMPLETED`;
+        }
+
+        // Macro Logic
+        function logMeal() {
+            const select = document.getElementById('food-select');
+            const kg = parseFloat(document.getElementById('food-weight').value) || 0;
+            if(kg <= 0) return showToast("Please enter weight!");
+
+            const kcalPerKg = parseFloat(select.value);
+            const pPerKg = parseFloat(select.options[select.selectedIndex].dataset.p);
+            const cPerKg = parseFloat(select.options[select.selectedIndex].dataset.c);
+            const fPerKg = parseFloat(select.options[select.selectedIndex].dataset.f);
+
+            macros.p += Math.round(pPerKg * kg);
+            macros.c += Math.round(cPerKg * kg);
+            macros.f += Math.round(fPerKg * kg);
+
+            updateUI();
+            showToast("Macros Logged!");
+            document.getElementById('food-weight').value = "";
+        }
+
+        function updateUI() {
+            const currentKcal = (macros.p * 4) + (macros.c * 4) + (macros.f * 9);
+            document.getElementById('current-kcal').innerText = Math.round(currentKcal);
+            
+            document.getElementById('val-p').innerText = macros.p + 'g';
+            document.getElementById('val-c').innerText = macros.c + 'g';
+            document.getElementById('val-f').innerText = macros.f + 'g';
+
+            // Update SVG Rings
+            updateRing('circle-p', macros.p, targets.p, 754);
+            updateRing('circle-c', macros.c, targets.c, 596);
+            updateRing('circle-f', macros.f, targets.f, 440);
+        }
+
+        function updateRing(id, val, target, circumference) {
+            const perc = Math.min(100, (val / target) * 100);
+            const offset = circumference - (perc / 100 * circumference);
+            document.getElementById(id).style.strokeDashoffset = offset;
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 2500);
+        }
+
+        initCalendar();
+        updateUI();
+    </script>
+</body>
+</html>

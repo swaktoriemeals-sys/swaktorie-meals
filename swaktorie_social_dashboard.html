@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaktorie Meals — Social Media Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="social_dashboard.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="swaktorie_logo_new.png" alt="Swaktorie Meals" class="sidebar-logo">
+            <h2 class="sidebar-brand"><span class="brand-green">Swaktorie</span> <span class="brand-amber">HQ</span></h2>
+            <p class="sidebar-subtitle">Social Media Command Center</p>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item active" data-tab="post-generator"><span class="nav-icon">📝</span> Post Generator</li>
+            <li class="nav-item" data-tab="promo-engine"><span class="nav-icon">🎯</span> Promo Engine</li>
+            <li class="nav-item" data-tab="content-calendar"><span class="nav-icon">📅</span> Content Calendar</li>
+            <li class="nav-item" data-tab="comment-templates"><span class="nav-icon">💬</span> Comment & Messenger</li>
+            <li class="nav-item" data-tab="analytics"><span class="nav-icon">📊</span> Analytics Tracker</li>
+            <li class="nav-item" data-tab="caption-library"><span class="nav-icon">📋</span> Caption Library</li>
+            <li class="nav-item" data-tab="bmi-recommender"><span class="nav-icon">🧮</span> BMI Recommender</li>
+        </ul>
+        <div class="sidebar-footer">
+            <button class="dark-toggle" onclick="toggleDarkMode()" id="dark-toggle">🌙</button>
+            <span class="sidebar-version">v1.0 — March 2026</span>
+        </div>
+    </nav>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="burger-btn" onclick="toggleSidebar()">☰</button>
+        <span class="mobile-brand"><span class="brand-green">Swaktorie</span> <span class="brand-amber">HQ</span></span>
+        <button class="dark-toggle-mobile" onclick="toggleDarkMode()">🌙</button>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="main-content">
+
+        <!-- ==================== TAB 1: POST GENERATOR ==================== -->
+        <section class="tab-panel active" id="tab-post-generator">
+            <div class="panel-header">
+                <h1 class="panel-title">📝 Post Generator</h1>
+                <p class="panel-desc">Create on-brand Facebook posts with one click. Select a type, customize, and copy.</p>
+            </div>
+            <div class="gen-grid">
+                <div class="gen-controls card-glass">
+                    <h3>Post Settings</h3>
+                    <div class="form-group">
+                        <label>Post Type</label>
+                        <select id="post-type" onchange="updatePostPreview()">
+                            <option value="meal-spotlight">🥗 Meal Spotlight</option>
+                            <option value="customer-testimonial">⭐ Customer Testimonial</option>
+                            <option value="health-tip">💡 Health Tip</option>
+                            <option value="behind-scenes">🎬 Behind the Scenes</option>
+                            <option value="promo-sale">🔥 Promo / Sale</option>
+                            <option value="motivational">💪 Motivational</option>
+                            <option value="poll-engagement">📊 Poll / Engagement</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Meal/Topic Name <span class="optional">(optional)</span></label>
+                        <input type="text" id="post-topic" placeholder="e.g. Sesame Chicken Bowl" oninput="updatePostPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Custom Detail <span class="optional">(optional)</span></label>
+                        <textarea id="post-detail" rows="3" placeholder="Any extra info to include..." oninput="updatePostPreview()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tone</label>
+                        <div class="tone-chips">
+                            <button class="chip active" data-tone="friendly" onclick="selectTone(this)">😊 Friendly</button>
+                            <button class="chip" data-tone="professional" onclick="selectTone(this)">💼 Professional</button>
+                            <button class="chip" data-tone="hype" onclick="selectTone(this)">🔥 Hype</button>
+                            <button class="chip" data-tone="educational" onclick="selectTone(this)">📖 Educational</button>
+                        </div>
+                    </div>
+                    <button class="btn-generate" onclick="generatePost()">✨ Generate Post</button>
+                </div>
+                <div class="gen-preview card-glass">
+                    <div class="fb-preview-frame">
+                        <div class="fb-header">
+                            <div class="fb-avatar">S</div>
+                            <div>
+                                <strong>Swaktorie Meals</strong>
+                                <div class="fb-meta">Just now · 🌐</div>
+                            </div>
+                        </div>
+                        <div class="fb-body" id="post-preview-body">
+                            <p class="fb-caption" id="post-preview-text">Your generated post will appear here...</p>
+                        </div>
+                        <div class="fb-actions">
+                            <span>👍 Like</span><span>💬 Comment</span><span>↗️ Share</span>
+                        </div>
+                    </div>
+                    <button class="btn-copy" onclick="copyToClipboard('post-preview-text')">📋 Copy Caption</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: PROMO ENGINE ==================== -->
+        <section class="tab-panel" id="tab-promo-engine">
+            <div class="panel-header">
+                <h1 class="panel-title">🎯 Promo Engine</h1>
+                <p class="panel-desc">Build promotions with auto-generated captions and Messenger greetings.</p>
+            </div>
+            <div class="gen-grid">
+                <div class="gen-controls card-glass">
+                    <h3>Promo Settings</h3>
+                    <div class="form-group">
+                        <label>Promo Type</label>
+                        <select id="promo-type" onchange="updatePromoPreview()">
+                            <option value="first-time">🆕 First-Time Buyer Discount</option>
+                            <option value="refer-friend">👫 Refer-a-Friend</option>
+                            <option value="payday">💰 Payday Sale</option>
+                            <option value="weekly-bundle">📦 Weekly Bundle Deal</option>
+                            <option value="holiday">🎉 Holiday Special</option>
+                            <option value="birthday">🎂 Birthday Promo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount %</label>
+                        <input type="number" id="promo-discount" placeholder="15" value="15" oninput="updatePromoPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Promo Code</label>
+                        <input type="text" id="promo-code" placeholder="SWAK15" value="SWAK15" oninput="updatePromoPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Valid Until</label>
+                        <input type="date" id="promo-expiry" oninput="updatePromoPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Extra Terms <span class="optional">(optional)</span></label>
+                        <input type="text" id="promo-terms" placeholder="Min. 1 week subscription" oninput="updatePromoPreview()">
+                    </div>
+                    <button class="btn-generate" onclick="generatePromo()">🎯 Generate Promo</button>
+                </div>
+                <div class="gen-preview card-glass">
+                    <h3 style="margin-bottom:0.5rem;">Facebook Post</h3>
+                    <div class="fb-preview-frame compact">
+                        <div class="fb-body">
+                            <p class="fb-caption" id="promo-preview-text">Your promo post will appear here...</p>
+                        </div>
+                    </div>
+                    <button class="btn-copy" onclick="copyToClipboard('promo-preview-text')">📋 Copy Post</button>
+                    <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">Messenger Greeting</h3>
+                    <div class="messenger-preview" id="promo-messenger-text">Messenger auto-reply will generate here...</div>
+                    <button class="btn-copy" onclick="copyToClipboard('promo-messenger-text')">📋 Copy Messenger Reply</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: CONTENT CALENDAR ==================== -->
+        <section class="tab-panel" id="tab-content-calendar">
+            <div class="panel-header">
+                <h1 class="panel-title">📅 Content Calendar</h1>
+                <p class="panel-desc">Plan your week with color-coded post types. Export to CSV for Meta Business Suite.</p>
+            </div>
+            <div class="calendar-toolbar">
+                <button class="btn-sm" onclick="populateSuggested()">✨ Auto-Fill Suggested</button>
+                <button class="btn-sm btn-outline" onclick="clearCalendar()">🗑️ Clear All</button>
+                <button class="btn-sm btn-outline" onclick="exportCalendarCSV()">📥 Export CSV</button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid"></div>
+        </section>
+
+        <!-- ==================== TAB 4: COMMENT & MESSENGER TEMPLATES ==================== -->
+        <section class="tab-panel" id="tab-comment-templates">
+            <div class="panel-header">
+                <h1 class="panel-title">💬 Comment & Messenger Templates</h1>
+                <p class="panel-desc">Ready-to-copy replies for every scenario and Messenger auto-reply flows.</p>
+            </div>
+            <div class="templates-section">
+                <h3>💬 Comment Reply Templates</h3>
+                <div class="template-grid" id="comment-templates-grid"></div>
+            </div>
+            <div class="templates-section" style="margin-top:3rem;">
+                <h3>📱 Messenger Auto-Reply Flow</h3>
+                <p class="panel-desc" style="margin-bottom:1.5rem;">Copy these into Meta Business Suite → Automated Responses</p>
+                <div class="messenger-flow" id="messenger-flow-container"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: ANALYTICS TRACKER ==================== -->
+        <section class="tab-panel" id="tab-analytics">
+            <div class="panel-header">
+                <h1 class="panel-title">📊 Analytics Tracker</h1>
+                <p class="panel-desc">Log your weekly KPIs and track growth over time.</p>
+            </div>
+            <div class="analytics-grid">
+                <div class="card-glass analytics-form">
+                    <h3>Log This Week's KPIs</h3>
+                    <div class="form-group"><label>Week Label</label><input type="text" id="ana-week" placeholder="e.g. Mar 17-23"></div>
+                    <div class="form-group"><label>Page Reach</label><input type="number" id="ana-reach" placeholder="1200"></div>
+                    <div class="form-group"><label>Engagement (Likes+Comments+Shares)</label><input type="number" id="ana-engagement" placeholder="350"></div>
+                    <div class="form-group"><label>New Page Likes</label><input type="number" id="ana-likes" placeholder="25"></div>
+                    <div class="form-group"><label>Messenger Inquiries</label><input type="number" id="ana-messenger" placeholder="40"></div>
+                    <div class="form-group"><label>Orders from FB</label><input type="number" id="ana-orders" placeholder="12"></div>
+                    <button class="btn-generate" onclick="logAnalytics()">📊 Log Week</button>
+                </div>
+                <div class="card-glass analytics-chart-area">
+                    <h3>Weekly Trend</h3>
+                    <canvas id="analytics-chart" width="600" height="300"></canvas>
+                    <div class="analytics-summary" id="analytics-summary">No data yet. Log your first week!</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 6: CAPTION LIBRARY ==================== -->
+        <section class="tab-panel" id="tab-caption-library">
+            <div class="panel-header">
+                <h1 class="panel-title">📋 Caption Library</h1>
+                <p class="panel-desc">50+ pre-written captions organized by category. Search, filter, favorite.</p>
+            </div>
+            <div class="library-toolbar">
+                <input type="text" id="caption-search" placeholder="🔍 Search captions..." oninput="filterCaptions()">
+                <div class="filter-chips" id="caption-filters"></div>
+            </div>
+            <div class="caption-grid" id="caption-grid"></div>
+        </section>
+
+        <!-- ==================== TAB 7: BMI RECOMMENDER ==================== -->
+        <section class="tab-panel" id="tab-bmi-recommender">
+            <div class="panel-header">
+                <h1 class="panel-title">🧮 BMI → Meal Plan Recommender</h1>
+                <p class="panel-desc">Calculate a customer's BMI & TDEE, then generate a personalized Messenger reply with their ideal Swaktorie plan.</p>
+            </div>
+            <div class="gen-grid">
+                <div class="gen-controls card-glass">
+                    <h3>Customer Info</h3>
+                    <div class="form-group">
+                        <label>Customer Name <span class="optional">(optional)</span></label>
+                        <input type="text" id="bmi-name" placeholder="e.g. Juan" oninput="updateBmiPreview()">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Gender</label>
+                            <select id="bmi-gender"><option value="male">Male</option><option value="female">Female</option></select>
+                        </div>
+                        <div class="form-group"><label>Age</label>
+                            <input type="number" id="bmi-age" placeholder="25">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Height (cm)</label>
+                            <input type="number" id="bmi-height" placeholder="170">
+                        </div>
+                        <div class="form-group"><label>Weight (kg)</label>
+                            <input type="number" id="bmi-weight" placeholder="75">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Activity Level</label>
+                        <select id="bmi-activity">
+                            <option value="1.2">Sedentary (desk job)</option>
+                            <option value="1.375">Lightly Active (1-3x/week)</option>
+                            <option value="1.55" selected>Moderately Active (3-5x/week)</option>
+                            <option value="1.725">Very Active (6-7x/week)</option>
+                            <option value="1.9">Extra Active (athlete)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Customer's Goal</label>
+                        <select id="bmi-goal">
+                            <option value="auto">🤖 Auto (based on BMI)</option>
+                            <option value="lose">🔥 Lose Weight</option>
+                            <option value="maintain">⚖️ Maintain Weight</option>
+                            <option value="gain">💪 Gain Weight / Muscle</option>
+                        </select>
+                    </div>
+                    <button class="btn-generate" onclick="calculateAndRecommend()">🧮 Calculate & Recommend</button>
+                </div>
+                <div class="gen-preview card-glass">
+                    <h3>Results</h3>
+                    <div class="bmi-results" id="bmi-results" style="display:none;">
+                        <div class="bmi-stat-row">
+                            <div class="bmi-stat"><span class="bmi-stat-label">BMI</span><span class="bmi-stat-value" id="res-bmi">—</span></div>
+                            <div class="bmi-stat"><span class="bmi-stat-label">Category</span><span class="bmi-stat-value" id="res-category">—</span></div>
+                            <div class="bmi-stat"><span class="bmi-stat-label">TDEE</span><span class="bmi-stat-value" id="res-tdee">—</span></div>
+                        </div>
+                        <div class="recommended-plan" id="res-plan-card"></div>
+                    </div>
+                    <h3 style="margin-top:1.5rem;">📱 Messenger Reply</h3>
+                    <div class="messenger-preview" id="bmi-messenger-reply">Fill in the customer info and click Calculate to generate a personalized reply.</div>
+                    <button class="btn-copy" onclick="copyToClipboard('bmi-messenger-reply')">📋 Copy Messenger Reply</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
+
+    <script src="social_dashboard.js"></script>
+</body>
+</html>

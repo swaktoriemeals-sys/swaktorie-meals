@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaktorie Meals — Menu & Pricing</title>
+    <link rel="icon" type="image/png" href="swaktorie_logo_v4.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --emerald: #059669;
+            --emerald-dark: #047857;
+            --emerald-light: #d1fae5;
+            --terracotta: #B45309;
+            --terracotta-light: #fef3c7;
+            --slate: #1e293b;
+            --cream: #F8FAF6;
+            --white: #FFFFFF;
+            --text-muted: #64748b;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-accent: 'Playfair Display', Georgia, serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--cream);
+            color: var(--slate);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== PAGE WRAPPER ===== */
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            padding: 3rem 0 1.5rem;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--emerald), var(--terracotta));
+            margin: 1.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        .logo-img {
+            height: 90px;
+            width: auto;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--slate);
+            margin-bottom: 0.25rem;
+        }
+
+        .header .tagline {
+            font-family: var(--font-accent);
+            font-style: italic;
+            color: var(--terracotta);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* ===== PROMO BANNER ===== */
+        .promo-banner {
+            background: linear-gradient(135deg, #059669 0%, #047857 40%, #065f46 100%);
+            color: white;
+            text-align: center;
+            padding: 1.2rem 1.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(5, 150, 105, 0.25);
+        }
+
+        .promo-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .promo-banner .promo-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-heading);
+        }
+
+        .promo-banner h2 {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.3rem;
+        }
+
+        .promo-banner p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--slate);
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-accent {
+            font-family: var(--font-accent);
+            font-style: italic;
+            color: var(--terracotta);
+        }
+
+        /* ===== MENU GRID ===== */
+        .menu-section { margin-bottom: 2.5rem; }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .week-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(5, 150, 105, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .week-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.08);
+        }
+
+        .week-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--emerald);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            letter-spacing: -0.02em;
+        }
+
+        .week-card h3 .week-num {
+            background: var(--emerald);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .day-block {
+            margin-bottom: 0.75rem;
+        }
+
+        .day-block:last-child { margin-bottom: 0; }
+
+        .day-label {
+            font-family: var(--font-heading);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .meal-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            line-height: 1.6;
+            color: var(--slate);
+        }
+
+        .meal-item .meal-num {
+            font-weight: 700;
+            color: var(--emerald);
+            font-size: 0.65rem;
+            min-width: 14px;
+        }
+
+        .meal-item.snack {
+            color: var(--terracotta);
+            font-style: italic;
+        }
+
+        .divider-line {
+            height: 1px;
+            background: rgba(5, 150, 105, 0.08);
+            margin: 0.6rem 0;
+        }
+
+        /* ===== PRICING TABLE ===== */
+        .pricing-section { margin-bottom: 2.5rem; }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            font-size: 0.85rem;
+        }
+
+        .pricing-table thead th {
+            background: linear-gradient(135deg, var(--slate), #334155);
+            color: white;
+            padding: 1rem 0.8rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+        }
+
+        .pricing-table thead th:first-child {
+            text-align: left;
+            padding-left: 1.2rem;
+        }
+
+        .pricing-table tbody td {
+            padding: 0.9rem 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            background: var(--white);
+        }
+
+        .pricing-table tbody td:first-child {
+            text-align: left;
+            padding-left: 1.2rem;
+            font-weight: 700;
+            font-family: var(--font-heading);
+        }
+
+        .pricing-table tbody tr:last-child td { border-bottom: none; }
+
+        .pricing-table tbody tr:hover td { background: #f8faf6; }
+
+        .plan-name {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .plan-kcal {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--emerald);
+            font-weight: 600;
+        }
+
+        .plan-desc {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            font-family: var(--font-body);
+            margin-top: 2px;
+        }
+
+        .price-val {
+            font-weight: 700;
+            color: var(--slate);
+            font-family: var(--font-heading);
+        }
+
+        .monthly-highlight {
+            background: var(--emerald-light) !important;
+        }
+
+        .save-badge {
+            display: inline-block;
+            background: var(--emerald);
+            color: white;
+            font-size: 0.55rem;
+            font-weight: 800;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+            font-family: var(--font-heading);
+        }
+
+        .pricing-note {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
+
+        /* ===== WHY SWAKTORIE ===== */
+        .perks-section { margin-bottom: 2.5rem; }
+
+        .perks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .perk-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            transition: transform 0.3s ease;
+        }
+
+        .perk-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .perk-icon {
+            font-size: 2rem;
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .perk-card h4 {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--slate);
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.02em;
+        }
+
+        .perk-card p {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ===== BENEFITS OF MEAL PREP ===== */
+        .benefits-section { margin-bottom: 2.5rem; }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: start;
+            gap: 0.8rem;
+            background: var(--white);
+            border-radius: 14px;
+            padding: 1.2rem;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+        }
+
+        .benefit-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--emerald-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .benefit-item h4 {
+            font-family: var(--font-heading);
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--slate);
+            margin-bottom: 0.15rem;
+            letter-spacing: -0.01em;
+        }
+
+        .benefit-item p {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ===== CONTACT FOOTER ===== */
+        .contact-strip {
+            background: linear-gradient(135deg, var(--slate), #334155);
+            color: white;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .contact-strip h3 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: #d1fae5;
+        }
+
+        .contact-items {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            opacity: 0.9;
+        }
+
+        .contact-note {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 0.8rem;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 1rem 0 2rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 700px) {
+            .menu-grid { grid-template-columns: 1fr; }
+            .perks-grid { grid-template-columns: 1fr; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .pricing-table { font-size: 0.75rem; }
+            .page { padding: 0 1rem; }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page { max-width: 100%; padding: 0 1cm; }
+            .header { padding-top: 0.5cm; padding-bottom: 0.5cm; }
+            .logo-img { height: 70px; }
+
+            .promo-banner, .week-card, .perk-card, .benefit-item, .contact-strip {
+                box-shadow: none !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .week-card:hover, .perk-card:hover, .benefit-item:hover {
+                transform: none;
+            }
+
+            .promo-banner {
+                background: #059669 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .pricing-table thead th {
+                background: #1e293b !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .contact-strip {
+                background: #1e293b !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .monthly-highlight {
+                background: #d1fae5 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .menu-grid { gap: 0.8rem; }
+
+            /* Avoid page breaks inside cards */
+            .week-card, .benefit-item, .perk-card { break-inside: avoid; }
+            .pricing-table { break-inside: avoid; }
+            .contact-strip { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <img src="swaktorie_logo_text_v6.png" alt="Swaktorie Meals" class="logo-img">
+        <h1>Premium Meal Prep — Bulacan, Philippines</h1>
+        <span class="tagline">Chef-Curated. Macro-Perfect. Delivered Fresh.</span>
+    </div>
+
+    <!-- ===== PROMO BANNER ===== -->
+    <div class="promo-banner">
+        <span class="promo-badge">⚡ Limited Time Only</span>
+        <h2>🔥 Soft Launch Sale — 30% OFF All Plans!</h2>
+        <p>All prices listed already reflect the 30% discount. Lock in your rate before the promo ends — the best time to start is <strong>now</strong>.</p>
+    </div>
+
+    <!-- ===== MENU SECTION ===== -->
+    <div class="menu-section">
+        <h2 class="section-title">🍽️ Our 4-Week Rotating Menu</h2>
+        <p class="section-subtitle"><span class="section-accent">Zero diet fatigue.</span> A new lineup of chef-crafted meals every week.</p>
+
+        <div class="menu-grid">
+
+            <!-- Week 1 -->
+            <div class="week-card">
+                <h3><span class="week-num">1</span> Week One</h3>
+                <div class="day-block">
+                    <div class="day-label">Mon – Thu</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Sesame Sunnies | or Egg in Hole</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Ground Beef Stir-Fry</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Cilantro Lime Chicken</div>
+                    <div class="meal-item snack"><span class="meal-num">🍨</span> PB Frozen Yogurt</div>
+                </div>
+                <div class="divider-line"></div>
+                <div class="day-block">
+                    <div class="day-label">Fri – Sun</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Tuna Cilantro Rice</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Chicken & Mushrooms</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Tofu Sisig</div>
+                    <div class="meal-item snack"><span class="meal-num">🍗</span> Crispy Tenders</div>
+                </div>
+            </div>
+
+            <!-- Week 2 -->
+            <div class="week-card">
+                <h3><span class="week-num">2</span> Week Two</h3>
+                <div class="day-block">
+                    <div class="day-label">Mon – Thu</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Scrambled Eggs | or French Toast</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Lemon Chicken & Broccoli</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Shrimp & Chicken Stir-Fry</div>
+                    <div class="meal-item snack"><span class="meal-num">🥜</span> Trail Mix</div>
+                </div>
+                <div class="divider-line"></div>
+                <div class="day-block">
+                    <div class="day-label">Fri – Sun</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Sunnies & Mushrooms</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Meatballs & Broccoli</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Chicken & Broccoli Udon</div>
+                    <div class="meal-item snack"><span class="meal-num">🥤</span> Bulk Up Shake</div>
+                </div>
+            </div>
+
+            <!-- Week 3 -->
+            <div class="week-card">
+                <h3><span class="week-num">3</span> Week Three</h3>
+                <div class="day-block">
+                    <div class="day-label">Mon – Thu</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Salmon & Cucumber</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Basic Chicken Fillet</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Gochujang Tofu</div>
+                    <div class="meal-item snack"><span class="meal-num">☕</span> Oatmilk Latte</div>
+                </div>
+                <div class="divider-line"></div>
+                <div class="day-block">
+                    <div class="day-label">Fri – Sun</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Tomato Eggs</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Rainbow Rice</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Sardines & Misua</div>
+                    <div class="meal-item snack"><span class="meal-num">💪</span> Performance Shake</div>
+                </div>
+            </div>
+
+            <!-- Week 4 -->
+            <div class="week-card">
+                <h3><span class="week-num">4</span> Week Four</h3>
+                <div class="day-block">
+                    <div class="day-label">Mon – Thu</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Apple PB Toast | or Egg in Hole</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Soy Chicken & Bok Choy</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Tuna Cilantro Lime Rice</div>
+                    <div class="meal-item snack"><span class="meal-num">🍨</span> PB Frozen Yoghurt</div>
+                </div>
+                <div class="divider-line"></div>
+                <div class="day-block">
+                    <div class="day-label">Fri – Sun</div>
+                    <div class="meal-item"><span class="meal-num">M1</span> Sesame Sunnies</div>
+                    <div class="meal-item"><span class="meal-num">M2</span> Chicken Fingers</div>
+                    <div class="meal-item"><span class="meal-num">M3</span> Beef Cabbage Rolls</div>
+                    <div class="meal-item snack"><span class="meal-num">🥤</span> Bulk Up Shake</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== PRICING TABLE ===== -->
+    <div class="pricing-section">
+        <h2 class="section-title">💰 Meal Plan Pricing</h2>
+        <p class="section-subtitle">3 clinical tiers. Choose the fuel that matches <span class="section-accent">your goals.</span></p>
+
+        <table class="pricing-table">
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>5-Day Starter</th>
+                    <th>7-Day Full</th>
+                    <th>2-Week Commit</th>
+                    <th>1-Month Power 💎</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span class="plan-name">🥬 Weight Loss</span>
+                        <span class="plan-kcal">1,200 kcal/day</span>
+                        <span class="plan-desc">3 meals + 1 snack</span>
+                    </td>
+                    <td><span class="price-val">₱2,199</span></td>
+                    <td><span class="price-val">₱3,199</span></td>
+                    <td><span class="price-val">₱6,398</span></td>
+                    <td class="monthly-highlight">
+                        <span class="price-val">₱11,516</span>
+                        <br><span class="save-badge">SAVE 10%</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="plan-name">⚖️ Maintenance</span>
+                        <span class="plan-kcal">1,500 kcal/day</span>
+                        <span class="plan-desc">3 hearty meals + recovery snack</span>
+                    </td>
+                    <td><span class="price-val">₱2,349</span></td>
+                    <td><span class="price-val">₱3,349</span></td>
+                    <td><span class="price-val">₱6,698</span></td>
+                    <td class="monthly-highlight">
+                        <span class="price-val">₱12,056</span>
+                        <br><span class="save-badge">SAVE 10%</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="plan-name">🔥 Performance</span>
+                        <span class="plan-kcal">1,800 kcal/day</span>
+                        <span class="plan-desc">Full power fuel + shakes</span>
+                    </td>
+                    <td><span class="price-val">₱2,499</span></td>
+                    <td><span class="price-val">₱3,499</span></td>
+                    <td><span class="price-val">₱6,998</span></td>
+                    <td class="monthly-highlight">
+                        <span class="price-val">₱12,596</span>
+                        <br><span class="save-badge">SAVE 10%</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="pricing-note">All prices reflect our <strong>30% Soft Launch Discount</strong>. 1-Month plans include an additional 10% loyalty savings.<br>Payment via GCash & Maya only.</p>
+    </div>
+
+    <!-- ===== WHY ORDER FROM SWAKTORIE ===== -->
+    <div class="perks-section">
+        <h2 class="section-title">✨ Why Order from Swaktorie?</h2>
+        <p class="section-subtitle">More than just food — it's <span class="section-accent">a complete nutrition system.</span></p>
+
+        <div class="perks-grid">
+            <div class="perk-card">
+                <span class="perk-icon">🤖</span>
+                <h4>24/7 AI Nutrition Coach</h4>
+                <p>Ask about macros, get personalized plan recommendations, and chat about your goals anytime with our live AI-powered coach — <strong>Swakto AI</strong>.</p>
+            </div>
+            <div class="perk-card">
+                <span class="perk-icon">📊</span>
+                <h4>Personalized Macro Tracker</h4>
+                <p>Every subscriber gets access to our built-in tracking dashboard — log your meals, monitor calories, and visualize your progress with real data.</p>
+            </div>
+            <div class="perk-card">
+                <span class="perk-icon">🧮</span>
+                <h4>BMI & TDEE Calculator</h4>
+                <p>Our on-site tools calculate your exact calorie needs using the Mifflin-St Jeor formula, then recommend the perfect plan for your body.</p>
+            </div>
+            <div class="perk-card">
+                <span class="perk-icon">👨‍🍳</span>
+                <h4>Chef-Curated Menus</h4>
+                <p>Our chef designs a new 4-week rotating menu with authentic Filipino flavors — no boring "diet food." Every meal is weighed and macro-labeled.</p>
+            </div>
+            <div class="perk-card">
+                <span class="perk-icon">📦</span>
+                <h4>Fresh Weekly Delivery</h4>
+                <p>Meals are freshly prepared (not frozen), packed in insulated food-safe containers, and delivered every Sunday for the entire week.</p>
+            </div>
+            <div class="perk-card">
+                <span class="perk-icon">🎯</span>
+                <h4>Allergy Accommodations</h4>
+                <p>Leave notes at checkout for nut-free, shellfish-free, dairy-free, or any other dietary restrictions. We've got you covered.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== WHY MEAL PREP ===== -->
+    <div class="benefits-section">
+        <h2 class="section-title">💪 Why Meal Prep Matters</h2>
+        <p class="section-subtitle">Here's why the best athletes, busy professionals, and health-conscious Filipinos <span class="section-accent">choose meal prep.</span></p>
+
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-icon">⏰</div>
+                <div>
+                    <h4>Save 10+ Hours Per Week</h4>
+                    <p>No more grocery runs, cooking, or cleaning. Meal prep frees your schedule so you can focus on training and living.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🎯</div>
+                <div>
+                    <h4>Hit Your Macros Perfectly</h4>
+                    <p>Every meal is weighed with clinical precision. No guessing, no calorie counting — just eat and trust the numbers.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">📉</div>
+                <div>
+                    <h4>Consistent, Sustainable Results</h4>
+                    <p>Crash diets fail. Meal prep builds consistent eating habits that lead to lasting transformations — without the suffering.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">💸</div>
+                <div>
+                    <h4>More Affordable Than You Think</h4>
+                    <p>At ₱280–₱415/day for 3 meals + snack, it's cheaper than eating out — and infinitely healthier than fast food.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🍱</div>
+                <div>
+                    <h4>Zero Diet Fatigue</h4>
+                    <p>Our rotating 4-week menu keeps things exciting. You'll never get bored eating the same chicken breast every day.</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🏋️</div>
+                <div>
+                    <h4>Trusted by Athletes & Coaches</h4>
+                    <p>Whether you're cutting weight, building muscle, or maintaining — we have a plan engineered for your exact goal.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONTACT STRIP ===== -->
+    <div class="contact-strip">
+        <h3>📞 Ready to Start? Let's Talk!</h3>
+        <div class="contact-items">
+            <span class="contact-item">📘 facebook.com/Swaktorie.Meals</span>
+            <span class="contact-item">🌐 swaktoriemeals.shop</span>
+        </div>
+        <div class="contact-items">
+            <span class="contact-item">📅 Order Cutoff: Every Thursday → Sunday Delivery</span>
+            <span class="contact-item">🚚 Delivery: Bulacan & Metro Manila</span>
+        </div>
+        <p class="contact-note">GCash & Maya accepted · No lock-in contracts · Pause or cancel anytime</p>
+    </div>
+
+    <div class="copyright">
+        © 2026 Swaktorie Health & Nutrition Co. · Bulacan, Philippines
+    </div>
+
+</div>
+
+</body>
+</html>
