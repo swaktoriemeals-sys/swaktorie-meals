@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swaktorie Meals — Menu & Plans</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+@page { size: 297mm 210mm landscape; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --green: #059669; --green-light: #10b981; --green-pale: #ecfdf5;
+    --orange: #ea580c; --orange-warm: #f97316; --orange-pale: #fff7ed;
+    --dark: #1e293b; --gray: #64748b; --light: #f8fafc;
+    --font-h: 'Poppins', sans-serif; --font-b: 'Nunito', sans-serif;
+    --font-a: 'Playfair Display', serif;
+}
+body { font-family: var(--font-b); color: var(--dark); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { width: 297mm; height: 210mm; padding: 10mm 14mm; page-break-after: always; position: relative; overflow: hidden; }
+
+/* ===== DECORATIVE CORNER ===== */
+.corner-deco { position: absolute; width: 30mm; height: 30mm; border-radius: 50%; opacity: 0.08; }
+.corner-tl { top: -8mm; left: -8mm; background: var(--green); }
+.corner-br { bottom: -8mm; right: -8mm; background: var(--orange); }
+
+/* ===== PAGE 1: PLANS ===== */
+.p1 { background: linear-gradient(160deg, #0f172a 0%, #1e293b 60%, #0f172a 100%); color: white; }
+.p1-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6mm; }
+.logo-text { font-family: var(--font-a); font-size: 26pt; font-weight: 700; color: var(--green-light); letter-spacing: -0.5px; }
+.logo-text span { color: var(--orange-warm); font-size: 15pt; margin-left: 3px; font-style: italic; }
+.logo-sub { font-family: var(--font-b); font-size: 9pt; color: #94a3b8; margin-top: 1mm; }
+.sale-pill { background: linear-gradient(135deg, var(--green-light), var(--green)); color: white; padding: 3.5mm 7mm; border-radius: 50px; font-family: var(--font-h); font-weight: 800; font-size: 12pt; letter-spacing: 0.5px; box-shadow: 0 4px 20px rgba(16,185,129,0.4); }
+.p1 h2 { font-family: var(--font-h); font-size: 18pt; font-weight: 800; text-align: center; margin-bottom: 5mm; color: white; }
+.p1 h2 em { font-family: var(--font-a); color: var(--green-light); font-weight: 600; font-style: italic; }
+
+.plans-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; margin-bottom: 5mm; }
+.plan { background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 5mm 4mm; text-align: center; position: relative; }
+.plan.star { border-color: var(--green-light); background: rgba(16,185,129,0.07); }
+.plan.star::before { content: '⭐ BEST SELLER'; position: absolute; top: -3.5mm; left: 50%; transform: translateX(-50%); background: var(--green); color: white; padding: 1mm 5mm; border-radius: 50px; font-size: 7pt; font-weight: 800; font-family: var(--font-h); letter-spacing: 0.8px; white-space: nowrap; }
+.plan-emoji { font-size: 28pt; margin-bottom: 1mm; }
+.plan-title { font-family: var(--font-h); font-weight: 800; font-size: 14pt; margin-bottom: 0.5mm; }
+.plan-cal { color: var(--green-light); font-weight: 700; font-size: 10pt; margin-bottom: 2mm; }
+.plan-tagline { color: #cbd5e1; font-size: 8.5pt; line-height: 1.5; margin-bottom: 3mm; }
+.ptable { width: 100%; border-collapse: collapse; }
+.ptable th { color: #94a3b8; font-size: 7.5pt; font-weight: 700; padding: 1.5mm; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.ptable td { padding: 1.5mm; text-align: center; font-size: 9pt; }
+.ptable .was { text-decoration: line-through; color: #64748b; font-size: 7pt; display: block; }
+.ptable .now { color: #6ee7b7; font-weight: 800; font-size: 9.5pt; }
+
+.p1-footer { display: flex; gap: 4mm; }
+.quick-facts { flex: 2; display: flex; justify-content: space-around; align-items: center; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 3mm; }
+.qf { text-align: center; }
+.qf-icon { font-size: 16pt; }
+.qf-text { font-size: 7.5pt; color: #94a3b8; margin-top: 0.5mm; font-weight: 600; }
+.byob-box { flex: 1; background: linear-gradient(135deg, var(--orange), var(--orange-warm)); border-radius: 10px; padding: 3.5mm 5mm; text-align: center; color: white; display: flex; flex-direction: column; justify-content: center; }
+.byob-box h4 { font-family: var(--font-h); font-size: 10pt; font-weight: 800; margin-bottom: 1mm; }
+.byob-box p { font-size: 8.5pt; opacity: 0.95; }
+
+/* ===== PAGE 2: MENU ===== */
+.p2 { background: white; }
+.p2-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4mm; padding-bottom: 3mm; border-bottom: 2.5px solid var(--green-pale); }
+.p2-logo { font-family: var(--font-a); font-size: 16pt; font-weight: 700; color: var(--green); }
+.p2-logo span { color: var(--orange); }
+.p2-title { font-family: var(--font-h); font-size: 18pt; font-weight: 800; color: var(--dark); }
+.p2-title em { font-family: var(--font-a); color: var(--orange); font-weight: 600; }
+.menu-note { text-align: center; color: var(--gray); font-size: 9.5pt; margin-bottom: 4mm; font-weight: 600; }
+
+.weeks { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin-bottom: 4mm; }
+.wk { background: var(--light); border-radius: 12px; padding: 4mm 5mm; border: 1.5px solid #e2e8f0; }
+.wk-head { display: flex; align-items: center; gap: 2.5mm; margin-bottom: 2.5mm; }
+.wk-num { background: var(--green); color: white; width: 8mm; height: 8mm; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-h); font-weight: 800; font-size: 10pt; flex-shrink: 0; }
+.wk-label { font-family: var(--font-h); font-weight: 800; font-size: 12pt; color: var(--dark); }
+.day-grp { margin-bottom: 2mm; }
+.day-grp:last-child { margin-bottom: 0; }
+.day-tag { font-family: var(--font-h); font-weight: 700; font-size: 8pt; color: var(--orange); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 1mm; }
+.meals { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5mm 4mm; }
+.ml { font-size: 9pt; color: var(--dark); line-height: 1.6; font-weight: 600; }
+.ml::before { content: '● '; color: var(--green); font-weight: 900; }
+
+.menu-tags { display: flex; justify-content: center; gap: 5mm; flex-wrap: wrap; }
+.mtag { background: var(--green-pale); color: var(--green); padding: 1.5mm 4mm; border-radius: 50px; font-size: 8pt; font-weight: 700; font-family: var(--font-h); }
+
+/* ===== PAGE 3: BENEFITS ===== */
+.p3 { background: linear-gradient(180deg, #ecfdf5 0%, white 50%, #fff7ed 100%); }
+.p3-header { text-align: center; margin-bottom: 5mm; }
+.p3-title { font-family: var(--font-h); font-size: 22pt; font-weight: 900; color: var(--dark); }
+.p3-title em { font-family: var(--font-a); color: var(--green); font-weight: 600; font-style: italic; }
+.p3-sub { color: var(--gray); font-size: 10pt; margin-top: 1mm; font-weight: 600; }
+
+.bens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-bottom: 5mm; }
+.ben { background: white; border-radius: 14px; padding: 5mm 4mm; text-align: center; border: 1.5px solid #e2e8f0; }
+.ben-icon { font-size: 26pt; margin-bottom: 2mm; }
+.ben-name { font-family: var(--font-h); font-weight: 800; font-size: 11pt; color: var(--dark); margin-bottom: 1.5mm; }
+.ben-desc { font-size: 8.5pt; color: var(--gray); line-height: 1.6; font-weight: 500; }
+
+.partner-box { background: var(--dark); color: white; border-radius: 14px; padding: 5mm 6mm; margin-bottom: 5mm; }
+.partner-box h3 { font-family: var(--font-h); font-size: 13pt; font-weight: 800; color: var(--green-light); text-align: center; margin-bottom: 3mm; }
+.partner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm 5mm; }
+.pi { display: flex; gap: 2mm; align-items: flex-start; }
+.pi-check { color: var(--green-light); font-size: 12pt; font-weight: 900; flex-shrink: 0; line-height: 1.2; }
+.pi-text { font-size: 9pt; color: #e2e8f0; line-height: 1.5; font-weight: 500; }
+.pi-text strong { color: white; font-weight: 700; }
+
+.cta { background: linear-gradient(135deg, var(--green-light), var(--green)); color: white; border-radius: 14px; padding: 5mm 8mm; display: flex; justify-content: space-between; align-items: center; }
+.cta h3 { font-family: var(--font-h); font-size: 15pt; font-weight: 800; margin-bottom: 1mm; }
+.cta p { font-size: 9.5pt; opacity: 0.95; font-weight: 500; }
+.cta-right { text-align: right; }
+.cta-line { font-size: 9.5pt; font-weight: 700; margin-bottom: 1.5mm; }
+
+@media print { .page { page-break-after: always; } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: OUR PLANS ==================== -->
+<div class="page p1">
+    <div class="corner-deco corner-tl"></div>
+    <div class="corner-deco corner-br"></div>
+
+    <div class="p1-header">
+        <div>
+            <div class="logo-text">Swaktorie <span>Meals</span></div>
+            <div class="logo-sub">Premium Meal Prep from the Heart of Bulacan</div>
+        </div>
+        <div class="sale-pill">🎉 30% OFF — Soft Launch Sale!</div>
+    </div>
+
+    <h2>Pick the Plan That's <em>Right for You</em></h2>
+
+    <div class="plans-row">
+        <div class="plan">
+            <div class="plan-emoji">🥗</div>
+            <div class="plan-title">Weight Loss</div>
+            <div class="plan-cal">1,200 calories per day</div>
+            <div class="plan-tagline">3 tasty meals + 1 healthy snack.<br>Perfect for losing weight safely.</div>
+            <table class="ptable">
+                <tr><th>Duration</th><th>Sale Price</th></tr>
+                <tr><td>5 Days</td><td><span class="was">₱3,141</span><span class="now">₱2,199</span></td></tr>
+                <tr><td>7 Days</td><td><span class="was">₱4,570</span><span class="now">₱3,199</span></td></tr>
+                <tr><td>2 Weeks</td><td><span class="was">₱9,140</span><span class="now">₱6,398</span></td></tr>
+                <tr><td>1 Month</td><td><span class="was">₱16,451</span><span class="now">₱11,516</span></td></tr>
+            </table>
+        </div>
+
+        <div class="plan star">
+            <div class="plan-emoji">🍲</div>
+            <div class="plan-title">Maintenance</div>
+            <div class="plan-cal">1,500 calories per day</div>
+            <div class="plan-tagline">3 hearty meals + recovery snack.<br>Great for staying fit & energized.</div>
+            <table class="ptable">
+                <tr><th>Duration</th><th>Sale Price</th></tr>
+                <tr><td>5 Days</td><td><span class="was">₱3,356</span><span class="now">₱2,349</span></td></tr>
+                <tr><td>7 Days</td><td><span class="was">₱4,784</span><span class="now">₱3,349</span></td></tr>
+                <tr><td>2 Weeks</td><td><span class="was">₱9,569</span><span class="now">₱6,698</span></td></tr>
+                <tr><td>1 Month</td><td><span class="was">₱17,223</span><span class="now">₱12,056</span></td></tr>
+            </table>
+        </div>
+
+        <div class="plan">
+            <div class="plan-emoji">🥩</div>
+            <div class="plan-title">Performance</div>
+            <div class="plan-cal">1,800 calories per day</div>
+            <div class="plan-tagline">Full-power fuel + protein shakes.<br>Built for athletes & active lifestyles.</div>
+            <table class="ptable">
+                <tr><th>Duration</th><th>Sale Price</th></tr>
+                <tr><td>5 Days</td><td><span class="was">₱3,570</span><span class="now">₱2,499</span></td></tr>
+                <tr><td>7 Days</td><td><span class="was">₱4,999</span><span class="now">₱3,499</span></td></tr>
+                <tr><td>2 Weeks</td><td><span class="was">₱9,997</span><span class="now">₱6,998</span></td></tr>
+                <tr><td>1 Month</td><td><span class="was">₱17,994</span><span class="now">₱12,596</span></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="p1-footer">
+        <div class="quick-facts">
+            <div class="qf"><div class="qf-icon">📦</div><div class="qf-text">Delivered<br>Every Sunday</div></div>
+            <div class="qf"><div class="qf-icon">🧊</div><div class="qf-text">Fresh &<br>Chilled</div></div>
+            <div class="qf"><div class="qf-icon">📱</div><div class="qf-text">Pay via<br>GCash / Maya</div></div>
+            <div class="qf"><div class="qf-icon">🚚</div><div class="qf-text">Bulacan &<br>Metro Manila</div></div>
+            <div class="qf"><div class="qf-icon">📅</div><div class="qf-text">Order by<br>Thursday</div></div>
+        </div>
+        <div class="byob-box">
+            <h4>🛠️ Build Your Own Box</h4>
+            <p>Choose your own protein & carbs — from <strong>₱320/meal</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PAGE 2: WHAT YOU'LL EAT ==================== -->
+<div class="page p2">
+    <div class="corner-deco corner-tl" style="background: var(--green);"></div>
+    <div class="corner-deco corner-br" style="background: var(--orange);"></div>
+
+    <div class="p2-header">
+        <div class="p2-logo">Swaktorie <span>Meals</span></div>
+        <div class="p2-title">What You'll Eat: The <em>4-Week Menu</em></div>
+        <div style="font-size: 8pt; color: var(--gray); font-weight: 600;">🔄 Rotating every week</div>
+    </div>
+    <div class="menu-note">Every week brings new dishes — so you never get bored! All meals are portion-controlled for your chosen plan.</div>
+
+    <div class="weeks">
+        <div class="wk">
+            <div class="wk-head"><div class="wk-num">1</div><div class="wk-label">Week One</div></div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Monday – Thursday</div>
+                <div class="meals">
+                    <div class="ml">Sesame Sunnies / Egg in Hole</div>
+                    <div class="ml">Ground Beef Stir-Fry</div>
+                    <div class="ml">Cilantro Lime Chicken</div>
+                    <div class="ml">PB Frozen Yogurt</div>
+                </div>
+            </div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Friday – Sunday</div>
+                <div class="meals">
+                    <div class="ml">Tuna Cilantro Rice</div>
+                    <div class="ml">Chicken & Mushrooms</div>
+                    <div class="ml">Tofu Sisig</div>
+                    <div class="ml">Crispy Tenders</div>
+                </div>
+            </div>
+        </div>
+        <div class="wk">
+            <div class="wk-head"><div class="wk-num">2</div><div class="wk-label">Week Two</div></div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Monday – Thursday</div>
+                <div class="meals">
+                    <div class="ml">Scrambled Eggs / French Toast</div>
+                    <div class="ml">Lemon Chicken & Broccoli</div>
+                    <div class="ml">Shrimp & Chicken Stir-Fry</div>
+                    <div class="ml">Trail Mix</div>
+                </div>
+            </div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Friday – Sunday</div>
+                <div class="meals">
+                    <div class="ml">Sunnies & Mushrooms</div>
+                    <div class="ml">Meatballs & Broccoli</div>
+                    <div class="ml">Chicken & Broccoli Udon</div>
+                    <div class="ml">Bulk Up Shake</div>
+                </div>
+            </div>
+        </div>
+        <div class="wk">
+            <div class="wk-head"><div class="wk-num">3</div><div class="wk-label">Week Three</div></div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Monday – Thursday</div>
+                <div class="meals">
+                    <div class="ml">Salmon & Cucumber</div>
+                    <div class="ml">Basic Chicken Fillet</div>
+                    <div class="ml">Gochujang Tofu</div>
+                    <div class="ml">Oatmilk Latte</div>
+                </div>
+            </div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Friday – Sunday</div>
+                <div class="meals">
+                    <div class="ml">Tomato Eggs</div>
+                    <div class="ml">Rainbow Rice</div>
+                    <div class="ml">Sardines & Misua</div>
+                    <div class="ml">Performance Shake</div>
+                </div>
+            </div>
+        </div>
+        <div class="wk">
+            <div class="wk-head"><div class="wk-num">4</div><div class="wk-label">Week Four</div></div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Monday – Thursday</div>
+                <div class="meals">
+                    <div class="ml">Apple PB Toast / Egg in Hole</div>
+                    <div class="ml">Soy Chicken & Bok Choy</div>
+                    <div class="ml">Tuna Cilantro Lime Rice</div>
+                    <div class="ml">PB Frozen Yoghurt</div>
+                </div>
+            </div>
+            <div class="day-grp">
+                <div class="day-tag">🗓️ Friday – Sunday</div>
+                <div class="meals">
+                    <div class="ml">Sesame Sunnies</div>
+                    <div class="ml">Chicken Fingers</div>
+                    <div class="ml">Beef Cabbage Rolls</div>
+                    <div class="ml">Bulk Up Shake</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-tags">
+        <div class="mtag">🧑‍🍳 Chef-Made Recipes</div>
+        <div class="mtag">📊 Macro-Balanced</div>
+        <div class="mtag">🌿 Fresh Ingredients</div>
+        <div class="mtag">🔄 New Meals Every Week</div>
+        <div class="mtag">⚠️ Allergy-Friendly Notes</div>
+    </div>
+</div>
+
+<!-- ==================== PAGE 3: WHY CHOOSE US ==================== -->
+<div class="page p3">
+    <div class="corner-deco corner-tl" style="background: var(--green);"></div>
+    <div class="corner-deco corner-br" style="background: var(--orange);"></div>
+
+    <div class="p3-header">
+        <div class="p3-title">Why Choose <em>Swaktorie?</em></div>
+        <div class="p3-sub">Healthy eating made simple, delicious, and affordable.</div>
+    </div>
+
+    <div class="bens">
+        <div class="ben">
+            <div class="ben-icon">⏱️</div>
+            <div class="ben-name">Save 10+ Hours a Week</div>
+            <div class="ben-desc">No grocery trips, no cooking, no cleanup. Just heat, eat, and enjoy your day!</div>
+        </div>
+        <div class="ben">
+            <div class="ben-icon">📊</div>
+            <div class="ben-name">Perfect Portions Every Time</div>
+            <div class="ben-desc">Every meal is carefully measured by our nutrition team to match your exact health goals.</div>
+        </div>
+        <div class="ben">
+            <div class="ben-icon">🧑‍🍳</div>
+            <div class="ben-name">Real Filipino Flavors</div>
+            <div class="ben-desc">Delicious recipes you'll actually crave — not bland diet food. Healthy never tasted this good!</div>
+        </div>
+        <div class="ben">
+            <div class="ben-icon">🧊</div>
+            <div class="ben-name">Always Fresh, Never Frozen</div>
+            <div class="ben-desc">Meals are chilled in sealed food-safe containers. Stays fresh for 5–7 days in the fridge.</div>
+        </div>
+        <div class="ben">
+            <div class="ben-icon">🤖</div>
+            <div class="ben-name">Free AI Nutrition Coach</div>
+            <div class="ben-desc">Our website has a smart AI coach that helps you find the perfect plan based on your body & goals.</div>
+        </div>
+        <div class="ben">
+            <div class="ben-icon">💰</div>
+            <div class="ben-name">Surprisingly Affordable</div>
+            <div class="ben-desc">Starting at just ₱2,199 for 5 days — that's under ₱150 per meal for chef-quality food!</div>
+        </div>
+    </div>
+
+    <div class="partner-box">
+        <h3>🤝 Why Partner With Swaktorie?</h3>
+        <div class="partner-grid">
+            <div class="pi"><span class="pi-check">✓</span><div class="pi-text"><strong>Easy to Scale</strong> — Cloud kitchen model with zero dine-in costs. Ready to grow across cities.</div></div>
+            <div class="pi"><span class="pi-check">✓</span><div class="pi-text"><strong>Steady Income</strong> — Subscription model means customers come back every week automatically.</div></div>
+            <div class="pi"><span class="pi-check">✓</span><div class="pi-text"><strong>Tech-Powered</strong> — AI website, automated orders via Google Sheets, and Messenger bot included.</div></div>
+            <div class="pi"><span class="pi-check">✓</span><div class="pi-text"><strong>Growing Market</strong> — Health-conscious Filipino consumers are growing 18% year over year.</div></div>
+        </div>
+    </div>
+
+    <div class="cta">
+        <div>
+            <h3>Ready to Start Eating Better?</h3>
+            <p>Order before Thursday — fresh meals arrive every Sunday! 🚚</p>
+        </div>
+        <div class="cta-right">
+            <div class="cta-line">🌐 swaktoriemeals.shop</div>
+            <div class="cta-line">📘 facebook.com/Swaktorie.Meals</div>
+            <div class="cta-line">📞 (0999) 123-4567</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

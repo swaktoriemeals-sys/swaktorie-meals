@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaktorie | Order Hub — Staff Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===== DESIGN TOKENS ===== */
+        :root {
+            --emerald: #059669;
+            --emerald-dark: #047857;
+            --emerald-light: #ecfdf5;
+            --amber: #f59e0b;
+            --amber-light: #fffbeb;
+            --coral: #ef4444;
+            --coral-light: #fef2f2;
+            --blue: #3b82f6;
+            --blue-light: #eff6ff;
+            --purple: #8b5cf6;
+            --slate: #1e293b;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --white: #ffffff;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark-mode {
+            --slate: #e2e8f0;
+            --slate-600: #94a3b8;
+            --slate-400: #64748b;
+            --slate-300: #475569;
+            --slate-200: #334155;
+            --slate-100: #1e293b;
+            --white: #0f172a;
+            --bg: #0b1120;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.4);
+            --emerald-light: rgba(5,150,105,0.15);
+            --amber-light: rgba(245,158,11,0.15);
+            --coral-light: rgba(239,68,68,0.15);
+            --blue-light: rgba(59,130,246,0.15);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--slate);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background 0.4s, color 0.4s;
+        }
+        h1,h2,h3,h4 { font-family: 'Outfit', sans-serif; }
+
+        /* ===== TOP BAR ===== */
+        .topbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-sm);
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .topbar-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--emerald), #10b981);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            font-weight: 800;
+            font-family: 'Outfit';
+        }
+        .topbar-title {
+            font-family: 'Outfit';
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+        }
+        .topbar-title span { color: var(--emerald); }
+        .topbar-badge {
+            background: var(--emerald-light);
+            color: var(--emerald);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .btn-icon {
+            background: var(--slate-100);
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        .btn-icon:hover { background: var(--emerald-light); border-color: var(--emerald); }
+
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .stat-icon.pending { background: var(--amber-light); }
+        .stat-icon.confirmed { background: rgba(249,115,22,0.1); }
+        .stat-icon.preparing { background: var(--blue-light); }
+        .stat-icon.delivered { background: var(--emerald-light); }
+        .stat-value {
+            font-family: 'Outfit';
+            font-weight: 800;
+            font-size: 1.8rem;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--slate-400);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 2rem 1rem;
+        }
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-family: 'Inter';
+            background: var(--card-bg);
+            color: var(--slate);
+            transition: var(--transition);
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--emerald);
+            box-shadow: 0 0 0 4px rgba(5,150,105,0.1);
+        }
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+        }
+        .filter-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .chip {
+            padding: 0.55rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            color: var(--slate-600);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .chip:hover { border-color: var(--emerald); color: var(--emerald); }
+        .chip.active {
+            background: var(--emerald);
+            border-color: var(--emerald);
+            color: white;
+        }
+        .btn-add {
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(135deg, var(--emerald), #10b981);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(5,150,105,0.25);
+        }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(5,150,105,0.35); }
+
+        /* ===== KANBAN BOARD ===== */
+        .kanban {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            padding: 0 2rem 3rem;
+            min-height: 60vh;
+        }
+        .kanban-col {
+            background: var(--slate-100);
+            border-radius: var(--radius);
+            padding: 1rem;
+            min-height: 400px;
+            border: 1px solid var(--border);
+        }
+        .kanban-col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+        }
+        .kanban-col-title {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .kanban-count {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            font-family: 'Outfit';
+        }
+        .kanban-col.pending .kanban-col-title { color: var(--amber); }
+        .kanban-col.confirmed .kanban-col-title { color: #f97316; }
+        .kanban-col.preparing .kanban-col-title { color: var(--blue); }
+        .kanban-col.delivered .kanban-col-title { color: var(--emerald); }
+
+        /* ===== ORDER CARDS ===== */
+        .order-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            padding: 1.1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            cursor: default;
+            animation: cardIn 0.3s ease-out;
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .order-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.6rem;
+        }
+        .order-id {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--emerald);
+            background: var(--emerald-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+        .order-time {
+            font-size: 0.7rem;
+            color: var(--slate-400);
+            font-weight: 500;
+        }
+        .order-customer {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.1rem;
+        }
+        .order-phone {
+            font-size: 0.8rem;
+            color: var(--slate-400);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .order-phone a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .order-phone a:hover { text-decoration: underline; }
+        .order-details {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--border);
+            font-size: 0.8rem;
+            color: var(--slate-600);
+        }
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.2rem 0;
+        }
+        .order-detail-label {
+            color: var(--slate-400);
+            font-weight: 500;
+        }
+        .order-detail-value {
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+        }
+        .order-total {
+            font-family: 'Outfit';
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--emerald);
+            margin-top: 0.5rem;
+            text-align: right;
+        }
+        .order-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.6rem;
+        }
+        .order-tag {
+            font-size: 0.68rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            background: var(--slate-100);
+            color: var(--slate-600);
+            border: 1px solid var(--border);
+        }
+        .order-tag.allergy {
+            background: var(--coral-light);
+            color: var(--coral);
+            border-color: rgba(239,68,68,0.2);
+        }
+        .order-tag.src-website { background: var(--blue-light); color: var(--blue); border-color: rgba(59,130,246,0.2); }
+        .order-tag.src-facebook { background: rgba(66,103,178,0.12); color: #4267B2; border-color: rgba(66,103,178,0.2); }
+        .order-tag.src-instagram { background: rgba(225,48,108,0.1); color: #E1306C; border-color: rgba(225,48,108,0.2); }
+        .order-tag.src-phone { background: rgba(139,92,246,0.1); color: var(--purple); border-color: rgba(139,92,246,0.2); }
+
+        /* ===== NOTIFICATION BELL ===== */
+        .btn-icon.has-alert { position: relative; }
+        .btn-icon.has-alert::after {
+            content: '';
+            position: absolute;
+            top: 5px; right: 5px;
+            width: 10px; height: 10px;
+            background: var(--coral);
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+            animation: bellPulse 1.5s infinite;
+        }
+        @keyframes bellPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+        .notif-banner {
+            display: none;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            animation: slideDown 0.4s ease-out;
+        }
+        .notif-banner.active { display: flex; }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        .notif-banner button {
+            background: rgba(255,255,255,0.2); border: none; color: white;
+            padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 700;
+        }
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        .order-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            font-family: 'Inter';
+        }
+        .order-btn.advance {
+            background: var(--emerald);
+            color: white;
+        }
+        .order-btn.advance:hover { background: var(--emerald-dark); }
+        .order-btn.back:hover { background: var(--slate-200); }
+        .order-btn.delete {
+            background: var(--coral-light);
+            color: var(--coral);
+            border: 1px solid rgba(239,68,68,0.2);
+        }
+        .order-btn.delete:hover {
+            background: var(--coral);
+            color: white;
+        }
+        .order-expand-btn {
+            background: none;
+            border: none;
+            font-size: 0.75rem;
+            color: var(--blue);
+            cursor: pointer;
+            font-weight: 600;
+            padding: 0.3rem 0;
+        }
+        .order-expand-btn:hover { text-decoration: underline; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 95%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalIn 0.3s ease-out;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+        .modal-close {
+            background: var(--slate-100);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .modal-close:hover { background: var(--coral-light); color: var(--coral); }
+        .modal-body { padding: 2rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            color: var(--slate-600);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            font-family: 'Inter';
+            font-size: 0.9rem;
+            background: var(--slate-100);
+            color: var(--slate);
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--emerald);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 4px rgba(5,150,105,0.1);
+        }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .modal-footer {
+            padding: 1.25rem 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        .btn-cancel {
+            padding: 0.65rem 1.5rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter';
+            color: var(--slate-600);
+            transition: var(--transition);
+        }
+        .btn-cancel:hover { background: var(--slate-100); }
+        .btn-delete {
+            background: var(--coral);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter';
+            transition: var(--transition);
+        }
+        .btn-delete:hover { background: #dc2626; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
+
+        .order-btn.delete {
+            background: rgba(239, 68, 68, 0.08);
+            color: var(--coral);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+            font-weight: 700;
+        }
+        .order-btn.delete:hover { background: var(--coral); color: white; }
+
+        /* Confirmation Modal Specifics */
+        .confirm-modal { max-width: 400px; text-align: center; }
+        .confirm-icon { font-size: 3rem; margin-bottom: 1rem; color: var(--coral); }
+        .confirm-title { margin-bottom: 0.5rem; }
+        .confirm-text { color: var(--slate-600); margin-bottom: 2rem; font-size: 0.95rem; }
+        .confirm-footer { display: flex; gap: 0.75rem; justify-content: center; }
+        .btn-submit {
+            padding: 0.65rem 1.5rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: linear-gradient(135deg, var(--emerald), #10b981);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-size: 0.9rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(5,150,105,0.25);
+        }
+        .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(5,150,105,0.35); }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--slate);
+            color: var(--bg);
+            padding: 0.85rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 9999;
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .toast.active { transform: translateX(-50%) translateY(0); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .kanban { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .topbar { padding: 0.8rem 1rem; }
+            .topbar-badge { display: none; }
+            .stats-bar { padding: 1rem; gap: 0.75rem; grid-template-columns: repeat(2, 1fr); }
+            .stat-card { padding: 1rem; }
+            .stat-value { font-size: 1.4rem; }
+            .stat-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+            .toolbar { padding: 0 1rem 1rem; }
+            .kanban { grid-template-columns: 1fr; padding: 0 1rem 2rem; }
+            .kanban-col { min-height: auto; }
+        }
+        @media (max-width: 480px) {
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .topbar-title { font-size: 1rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-col {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--slate-400);
+            font-size: 0.85rem;
+        }
+        .empty-col-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .topbar, .toolbar, .order-actions, .btn-icon, .btn-add { display: none !important; }
+            .kanban { display: block; }
+            .kanban-col { break-inside: avoid; margin-bottom: 2rem; }
+            .order-card { break-inside: avoid; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Staff Access Guard -->
+    <script>
+        (function() {
+            const pass = prompt("Access Restricted: Please enter the Staff Password");
+            if (pass !== "swakto2025") {
+                alert("Unauthorized Access.");
+                window.location.href = "index.html";
+            }
+        })();
+    </script>
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="topbar-brand">
+                <div class="topbar-logo">S</div>
+                <div>
+                    <div class="topbar-title"><span>Order</span> Hub</div>
+                </div>
+            </div>
+            <span class="topbar-badge">Staff Only</span>
+        </div>
+        <div class="topbar-right">
+            <button class="btn-icon" onclick="toggleNotifications()" id="notif-toggle" title="Toggle Notifications">🔔</button>
+            <button class="btn-icon" onclick="window.print()" title="Print Orders">🖨️</button>
+            <button class="btn-icon" onclick="toggleDarkMode()" id="dark-toggle" title="Toggle Dark Mode">🌙</button>
+            <button class="btn-icon" onclick="refreshData()" title="Refresh Data">🔄</button>
+        </div>
+    </header>
+
+    <!-- NOTIFICATION BANNER -->
+    <div class="notif-banner" id="notif-banner">
+        <span id="notif-banner-msg">🔔 New order received!</span>
+        <button onclick="dismissNotifBanner()">Dismiss</button>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(139,92,246,0.1);">📦</div>
+            <div>
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(16,185,129,0.1);">💰</div>
+            <div>
+                <div class="stat-value" id="stat-revenue" style="font-size: 1.4rem;">₱0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon pending">🟡</div>
+            <div>
+                <div class="stat-value" id="stat-pending">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon confirmed">🟠</div>
+            <div>
+                <div class="stat-value" id="stat-confirmed">0</div>
+                <div class="stat-label">Confirmed</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon preparing">🔵</div>
+            <div>
+                <div class="stat-value" id="stat-preparing">0</div>
+                <div class="stat-label">Preparing</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon delivered">🟢</div>
+            <div>
+                <div class="stat-value" id="stat-delivered">0</div>
+                <div class="stat-label">Delivered</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Search by name, phone, or order ID..." oninput="renderBoard()">
+        </div>
+        <div class="filter-chips">
+            <button class="chip active" data-filter="all" onclick="setFilter('all', this)">All</button>
+            <button class="chip" data-filter="pending" onclick="setFilter('pending', this)">🟡 Pending</button>
+            <button class="chip" data-filter="confirmed" onclick="setFilter('confirmed', this)">🟠 Confirmed</button>
+            <button class="chip" data-filter="preparing" onclick="setFilter('preparing', this)">🔵 Preparing</button>
+            <button class="chip" data-filter="delivered" onclick="setFilter('delivered', this)">🟢 Delivered</button>
+        </div>
+        <button class="btn-add" onclick="openAddModal()">➕ Add Order</button>
+    </div>
+
+    <!-- KANBAN BOARD -->
+    <div class="kanban" id="kanban-board">
+        <div class="kanban-col pending" id="col-pending">
+            <div class="kanban-col-header">
+                <div class="kanban-col-title">🟡 Pending</div>
+                <div class="kanban-count" id="count-pending">0</div>
+            </div>
+            <div class="kanban-col-body" id="body-pending"></div>
+        </div>
+        <div class="kanban-col confirmed" id="col-confirmed">
+            <div class="kanban-col-header">
+                <div class="kanban-col-title">🟠 Confirmed</div>
+                <div class="kanban-count" id="count-confirmed">0</div>
+            </div>
+            <div class="kanban-col-body" id="body-confirmed"></div>
+        </div>
+        <div class="kanban-col preparing" id="col-preparing">
+            <div class="kanban-col-header">
+                <div class="kanban-col-title">🔵 Preparing</div>
+                <div class="kanban-count" id="count-preparing">0</div>
+            </div>
+            <div class="kanban-col-body" id="body-preparing"></div>
+        </div>
+        <div class="kanban-col delivered" id="col-delivered">
+            <div class="kanban-col-header">
+                <div class="kanban-col-title">🟢 Delivered</div>
+                <div class="kanban-count" id="count-delivered">0</div>
+            </div>
+            <div class="kanban-col-body" id="body-delivered"></div>
+        </div>
+    </div>
+
+    <!-- ADD ORDER MODAL -->
+    <div class="modal-overlay" id="add-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>➕ Add New Order</h3>
+                <button class="modal-close" onclick="closeAddModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Customer Name *</label>
+                        <input type="text" id="add-name" placeholder="Juan Dela Cruz">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="add-phone" placeholder="09XX XXX XXXX">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email (Optional)</label>
+                    <input type="email" id="add-email" placeholder="juan@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Order Source *</label>
+                    <select id="add-source">
+                        <option value="facebook">📱 Facebook / Messenger</option>
+                        <option value="instagram">📸 Instagram</option>
+                        <option value="website">🌐 Website</option>
+                        <option value="phone">📞 Phone Call</option>
+                        <option value="walkin">🚶 Walk-in</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Meal Plan *</label>
+                    <select id="add-plan">
+                        <option value="1200 kcal Weight Loss (5-Day Subscription)">1200 kcal Weight Loss — 5-Day (₱2,199)</option>
+                        <option value="1200 kcal Weight Loss (7-Day Subscription)">1200 kcal Weight Loss — 7-Day (₱3,199)</option>
+                        <option value="1200 kcal Weight Loss (2-Week Subscription)">1200 kcal Weight Loss — 2-Week (₱6,398)</option>
+                        <option value="1200 kcal Weight Loss (1-Month Subscription)">1200 kcal Weight Loss — 1-Month (₱11,516)</option>
+                        <option value="1500 kcal Maintenance (5-Day Subscription)">1500 kcal Maintenance — 5-Day (₱2,349)</option>
+                        <option value="1500 kcal Maintenance (7-Day Subscription)">1500 kcal Maintenance — 7-Day (₱3,349)</option>
+                        <option value="1500 kcal Maintenance (2-Week Subscription)">1500 kcal Maintenance — 2-Week (₱6,698)</option>
+                        <option value="1500 kcal Maintenance (1-Month Subscription)">1500 kcal Maintenance — 1-Month (₱12,056)</option>
+                        <option value="1800 kcal Performance (5-Day Subscription)">1800 kcal Performance — 5-Day (₱2,499)</option>
+                        <option value="1800 kcal Performance (7-Day Subscription)">1800 kcal Performance — 7-Day (₱3,499)</option>
+                        <option value="1800 kcal Performance (2-Week Subscription)">1800 kcal Performance — 2-Week (₱6,998)</option>
+                        <option value="1800 kcal Performance (1-Month Subscription)">1800 kcal Performance — 1-Month (₱12,596)</option>
+                        <option value="Custom BYOB Box">Custom BYOB Box (₱320)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Full Delivery Address *</label>
+                    <input type="text" id="add-address" placeholder="Block 4, Lot 12, Brgy. Caingin, San Rafael">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Area / City *</label>
+                        <select id="add-area">
+                            <option value="">— Select —</option>
+                            <optgroup label="🟢 FREE Delivery">
+                                <option value="San Rafael, Bulacan">San Rafael</option>
+                                <option value="Baliwag City, Bulacan">Baliwag City</option>
+                            </optgroup>
+                            <optgroup label="🟡 +₱50/day">
+                                <option value="Malolos">Malolos</option>
+                                <option value="Bocaue">Bocaue</option>
+                                <option value="Guiguinto">Guiguinto</option>
+                                <option value="Plaridel">Plaridel</option>
+                                <option value="Pulilan">Pulilan</option>
+                                <option value="Calumpit">Calumpit</option>
+                                <option value="Hagonoy">Hagonoy</option>
+                                <option value="San Miguel">San Miguel</option>
+                                <option value="Bustos">Bustos</option>
+                                <option value="Angat">Angat</option>
+                                <option value="Doña Remedios Trinidad">DRT</option>
+                                <option value="Other Bulacan">Other Bulacan</option>
+                            </optgroup>
+                            <optgroup label="🔴 +₱100/day">
+                                <option value="Metro Manila">Metro Manila</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method *</label>
+                        <select id="add-payment">
+                            <option value="GCash">GCash</option>
+                            <option value="Maya">Maya</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Allergies / Special Notes</label>
+                    <textarea id="add-allergies" placeholder="E.g., No peanuts, extra rice, etc."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
+                <button class="btn-submit" onclick="submitNewOrder()">🛒 Add Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="delete-confirm-modal">
+        <div class="modal confirm-modal">
+            <div class="modal-body">
+                <div class="confirm-icon">⚠️</div>
+                <h3 class="confirm-title">Delete this Order?</h3>
+                <p class="confirm-text">This action cannot be undone. Are you sure you want to remove this order from the system?</p>
+                <div class="confirm-footer">
+                    <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                    <button class="btn-delete" id="confirm-delete-btn">Yes, Delete Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"><span id="toast-msg">Saved!</span></div>
+
+    <script>
+        // ==================== CONFIG ====================
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw3e0KyuiKVeXNWxNLUFuxBX0AiEhnUpdMdtCrS88yFcyvgjxfqCzLxnPUMzG-hkNlQ/exec'; // Live API URL
+
+        // ==================== PRICING LOOKUP ====================
+        const priceLookup = {
+            '1200 kcal Weight Loss (5-Day Subscription)': 2199,
+            '1200 kcal Weight Loss (7-Day Subscription)': 3199,
+            '1200 kcal Weight Loss (2-Week Subscription)': 6398,
+            '1200 kcal Weight Loss (1-Month Subscription)': 11516,
+            '1500 kcal Maintenance (5-Day Subscription)': 2349,
+            '1500 kcal Maintenance (7-Day Subscription)': 3349,
+            '1500 kcal Maintenance (2-Week Subscription)': 6698,
+            '1500 kcal Maintenance (1-Month Subscription)': 12056,
+            '1800 kcal Performance (5-Day Subscription)': 2499,
+            '1800 kcal Performance (7-Day Subscription)': 3499,
+            '1800 kcal Performance (2-Week Subscription)': 6998,
+            '1800 kcal Performance (1-Month Subscription)': 12596,
+            'Custom BYOB Box': 320
+        };
+
+        const deliveryFeeMap = {
+            'San Rafael, Bulacan': 0,
+            'Baliwag City, Bulacan': 0,
+            'Malolos': 50, 'Bocaue': 50, 'Guiguinto': 50, 'Plaridel': 50, 'Pulilan': 50,
+            'Calumpit': 50, 'Hagonoy': 50, 'San Miguel': 50, 'Bustos': 50, 'Angat': 50,
+            'Doña Remedios Trinidad': 50, 'Other Bulacan': 50,
+            'Metro Manila': 100
+        };
+
+        // ==================== STATUSES ====================
+        const STATUS_FLOW = ['pending', 'confirmed', 'preparing', 'delivered'];
+        const STATUS_LABELS = {
+            pending: '🟡 Pending',
+            confirmed: '🟠 Confirmed',
+            preparing: '🔵 Preparing',
+            delivered: '🟢 Delivered'
+        };
+        const NEXT_ACTION = {
+            pending: 'Confirm ✓',
+            confirmed: 'Start Prep 🔥',
+            preparing: 'Mark Delivered ✅',
+            delivered: null
+        };
+
+        // ==================== STATE ====================
+        let orders = [];
+        let activeFilter = 'all';
+        let expandedCards = new Set();
+        let isSyncing = false;
+        let lastSynced = null;
+
+        // ==================== DEMO DATA ====================
+        function generateDemoOrders() {
+            return [
+                {
+                    orderId: 'SWK-20260322-001',
+                    timestamp: '3/22/2026, 8:14:00 AM',
+                    name: 'Maria Santos',
+                    phone: '09171234567',
+                    email: 'maria@gmail.com',
+                    address: 'Block 3, Lot 8, Villa Verde, Brgy. Caingin',
+                    area: 'San Rafael, Bulacan',
+                    items: '1500 kcal Maintenance (7-Day Subscription)',
+                    subtotal: 3349,
+                    deliveryFee: 0,
+                    total: 3349,
+                    payment: 'GCash',
+                    allergies: 'No shrimp',
+                    status: 'pending',
+                    source: 'website'
+                },
+                {
+                    orderId: 'SWK-20260322-002',
+                    timestamp: '3/22/2026, 9:02:00 AM',
+                    name: 'Juan Dela Cruz',
+                    phone: '09281234568',
+                    email: 'N/A',
+                    address: '123 Rizal St., Poblacion',
+                    area: 'Baliwag City, Bulacan',
+                    items: '1200 kcal Weight Loss (2-Week Subscription)',
+                    subtotal: 6398,
+                    deliveryFee: 0,
+                    total: 6398,
+                    payment: 'Maya',
+                    allergies: 'None',
+                    status: 'pending',
+                    source: 'facebook'
+                },
+                {
+                    orderId: 'SWK-20260321-015',
+                    timestamp: '3/21/2026, 3:30:00 PM',
+                    name: 'Angela Reyes',
+                    phone: '09551234569',
+                    email: 'angela.reyes@yahoo.com',
+                    address: '45 Sampaguita St., Barangay 5',
+                    area: 'Malolos',
+                    items: '1800 kcal Performance (1-Month Subscription)',
+                    subtotal: 12596,
+                    deliveryFee: 1400,
+                    total: 13996,
+                    payment: 'GCash',
+                    allergies: 'Lactose intolerant',
+                    status: 'confirmed',
+                    source: 'facebook'
+                },
+                {
+                    orderId: 'SWK-20260321-012',
+                    timestamp: '3/21/2026, 11:00:00 AM',
+                    name: 'Paolo Garcia',
+                    phone: '09991234570',
+                    email: 'paolo.g@gmail.com',
+                    address: '88 Mabini Ave., Phase 2',
+                    area: 'San Rafael, Bulacan',
+                    items: '1500 kcal Maintenance (5-Day Subscription)',
+                    subtotal: 2349,
+                    deliveryFee: 0,
+                    total: 2349,
+                    payment: 'GCash',
+                    allergies: 'None',
+                    status: 'preparing',
+                    source: 'phone'
+                },
+                {
+                    orderId: 'SWK-20260320-008',
+                    timestamp: '3/20/2026, 2:00:00 PM',
+                    name: 'Sofia Mendoza',
+                    phone: '09181234571',
+                    email: 'sofiam@gmail.com',
+                    address: 'Unit 5B, Green Residences, Barangay Tibag',
+                    area: 'Baliwag City, Bulacan',
+                    items: '1200 kcal Weight Loss (7-Day Subscription)',
+                    subtotal: 3199,
+                    deliveryFee: 0,
+                    total: 3199,
+                    payment: 'Cash on Delivery (COD)',
+                    allergies: 'No peanuts, low sodium',
+                    status: 'delivered',
+                    source: 'website'
+                },
+                {
+                    orderId: 'SWK-20260322-003',
+                    timestamp: '3/22/2026, 10:45:00 AM',
+                    name: 'Rico Bautista',
+                    phone: '09361234572',
+                    email: 'N/A',
+                    address: '12 Kalayaan St., Purok 3',
+                    area: 'Metro Manila',
+                    items: '1800 kcal Performance (7-Day Subscription)',
+                    subtotal: 3499,
+                    deliveryFee: 700,
+                    total: 4199,
+                    payment: 'Maya',
+                    allergies: 'None',
+                    status: 'pending',
+                    source: 'facebook'
+                }
+            ];
+        }
+
+        // ==================== SYNC LOGIC ====================
+        async function fetchOrders() {
+            if (isSyncing) return;
+            isSyncing = true;
+            showToast("🔄 Syncing with Google Sheets...");
+            
+            try {
+                const response = await fetch(`${GOOGLE_SHEETS_URL}?t=${Date.now()}`);
+                if (!response.ok) throw new Error("Network response was not ok");
+                
+                const data = await response.json();
+                
+                // Handle error object from script
+                if (data && data.error) {
+                    throw new Error(data.error);
+                }
+
+                if (data && Array.isArray(data) && data.length > 0) {
+                    // Normalize each order for the Staff Hub renderer
+                    orders = data.map(row => ({
+                        orderId: row.orderId || row.orderid || '',
+                        timestamp: row.timestamp || '',
+                        name: row.name || '',
+                        phone: row.phone || '',
+                        email: row.email || 'N/A',
+                        address: row.address || '',
+                        area: row.area || '',
+                        items: row.items || '',
+                        subtotal: parseFloat(row.subtotal) || 0,
+                        deliveryFee: (row.deliveryFee === 'TBC' || row.deliveryfee === 'TBC') ? 0 : (parseFloat(row.deliveryFee || row.deliveryfee) || 0),
+                        total: parseFloat(row.total) || 0,
+                        payment: row.payment || 'N/A',
+                        allergies: row.allergies || 'None',
+                        status: row.status || 'pending',
+                        source: row.source || 'website'
+                    }));
+
+                    lastSynced = new Date();
+                    saveOrders();
+                    renderBoard();
+                    showToast("✅ Synced " + orders.length + " orders");
+                } else if (data && Array.isArray(data) && data.length === 0) {
+                    showToast("📭 No orders in sheet yet");
+                } else {
+                    throw new Error("Unexpected response format");
+                }
+            } catch (error) {
+                console.error("Sync Error:", error);
+                showToast("❌ Sync Failed. Using local data.");
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+
+        async function updateOrderOnSheet(order) {
+            try {
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // standard for Apps Script web apps
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update',
+                        orderId: order.orderId,
+                        status: order.status
+                    })
+                });
+            } catch (error) {
+                console.error("Update Error:", error);
+            }
+        }
+
+        // ==================== INIT ====================
+        async function init() {
+            // 1. Load from LocalStorage first for instant UI
+            const saved = localStorage.getItem('swaktorie_orders');
+            if (saved) {
+                try {
+                    orders = JSON.parse(saved);
+                    renderBoard();
+                } catch (e) {
+                    orders = generateDemoOrders();
+                    renderBoard();
+                }
+            } else {
+                orders = generateDemoOrders();
+                renderBoard();
+            }
+
+            // 2. Immediately try to fetch live data
+            await fetchOrders();
+        }
+
+        // Add a refresh function for the manual refresh button
+        async function refreshData() {
+            await fetchOrders();
+        }
+
+        function saveOrders() {
+            localStorage.setItem('swaktorie_orders', JSON.stringify(orders));
+        }
+
+        // ==================== RENDER ====================
+        function renderBoard() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+
+            // Clear all columns
+            STATUS_FLOW.forEach(status => {
+                document.getElementById('body-' + status).innerHTML = '';
+            });
+
+            // Filter & organize
+            const counts = { pending: 0, confirmed: 0, preparing: 0, delivered: 0 };
+            let totalOrders = 0;
+            let totalRevenue = 0;
+
+            orders.forEach((order, idx) => {
+                const status = order.status || 'pending';
+                
+                // Safety catch: Skip cancelled or unknown order statuses so they don't break the board
+                if (!STATUS_FLOW.includes(status)) return;
+                
+                counts[status]++;
+                totalOrders++;
+                totalRevenue += (order.total || 0);
+
+                // Apply filters
+                if (activeFilter !== 'all' && status !== activeFilter) return;
+
+                // Apply search
+                if (searchTerm) {
+                    const haystack = `${order.name} ${order.phone} ${order.orderId} ${order.items} ${order.area}`.toLowerCase();
+                    if (!haystack.includes(searchTerm)) return;
+                }
+
+                const isExpanded = expandedCards.has(order.orderId);
+                const card = createOrderCard(order, idx, isExpanded);
+                document.getElementById('body-' + status).appendChild(card);
+            });
+
+            // Update column counts
+            STATUS_FLOW.forEach(status => {
+                document.getElementById('count-' + status).innerText = counts[status];
+            });
+
+            // Update stat cards
+            document.getElementById('stat-total').innerText = totalOrders;
+            document.getElementById('stat-revenue').innerText = '₱' + totalRevenue.toLocaleString();
+            document.getElementById('stat-pending').innerText = counts.pending;
+            document.getElementById('stat-confirmed').innerText = counts.confirmed;
+            document.getElementById('stat-preparing').innerText = counts.preparing;
+            document.getElementById('stat-delivered').innerText = counts.delivered;
+
+            // Empty states
+            STATUS_FLOW.forEach(status => {
+                const body = document.getElementById('body-' + status);
+                if (body.children.length === 0) {
+                    body.innerHTML = `<div class="empty-col"><div class="empty-col-icon">📭</div>No orders here</div>`;
+                }
+            });
+
+            // Show/hide columns based on filter
+            STATUS_FLOW.forEach(status => {
+                const col = document.getElementById('col-' + status);
+                if (activeFilter === 'all') {
+                    col.style.display = '';
+                } else {
+                    col.style.display = status === activeFilter ? '' : 'none';
+                }
+            });
+
+            // Update kanban grid columns when filtering
+            const board = document.getElementById('kanban-board');
+            if (activeFilter !== 'all') {
+                board.style.gridTemplateColumns = '1fr';
+            } else {
+                board.style.gridTemplateColumns = '';
+            }
+
+            // Update Parent Hub (Staff Hub) if exists
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'updateOrderCount', count: counts.pending }, '*');
+            }
+        }
+
+        function createOrderCard(order, idx, isExpanded) {
+            const div = document.createElement('div');
+            div.className = 'order-card';
+            div.id = 'card-' + order.orderId;
+
+            const statusIdx = STATUS_FLOW.indexOf(order.status);
+            const canAdvance = statusIdx < STATUS_FLOW.length - 1;
+            const canGoBack = statusIdx > 0;
+
+            let detailsHTML = '';
+            if (isExpanded) {
+                detailsHTML = `
+                    <div class="order-details">
+                        <div class="order-detail-row">
+                            <span class="order-detail-label">Plan</span>
+                            <span class="order-detail-value">${order.items}</span>
+                        </div>
+                        <div class="order-detail-row">
+                            <span class="order-detail-label">Address</span>
+                            <span class="order-detail-value">${order.address}</span>
+                        </div>
+                        <div class="order-detail-row">
+                            <span class="order-detail-label">Area</span>
+                            <span class="order-detail-value">${order.area}</span>
+                        </div>
+                        <div class="order-detail-row">
+                            <span class="order-detail-label">Payment</span>
+                            <span class="order-detail-value">${order.payment}</span>
+                        </div>
+                        <div class="order-detail-row">
+                            <span class="order-detail-label">Subtotal</span>
+                            <span class="order-detail-value">₱${order.subtotal.toLocaleString()}</span>
+                        </div>
+                        ${order.deliveryFee > 0 ? `<div class="order-detail-row">
+                            <span class="order-detail-label">Delivery</span>
+                            <span class="order-detail-value">₱${order.deliveryFee.toLocaleString()}</span>
+                        </div>` : ''}
+                        <div class="order-total">₱${order.total.toLocaleString()}</div>
+                    </div>
+                `;
+            }
+
+            let tagsHTML = '';
+            // Source tag
+            const srcLabels = { website: '🌐 Website', facebook: '📱 Facebook', instagram: '📸 Instagram', phone: '📞 Phone', walkin: '🚶 Walk-in' };
+            const srcClass = { website: 'src-website', facebook: 'src-facebook', instagram: 'src-instagram', phone: 'src-phone', walkin: 'src-phone' };
+            if (order.source) {
+                tagsHTML += `<span class="order-tag ${srcClass[order.source] || ''}">${srcLabels[order.source] || order.source}</span>`;
+            }
+            if (order.allergies && order.allergies !== 'None' && order.allergies !== 'N/A') {
+                tagsHTML += `<span class="order-tag allergy">⚠️ ${order.allergies}</span>`;
+            }
+            if (order.deliveryFee === 0) {
+                tagsHTML += `<span class="order-tag">🟢 Free Delivery</span>`;
+            } else {
+                tagsHTML += `<span class="order-tag">🚚 +₱${order.deliveryFee.toLocaleString()}</span>`;
+            }
+
+            let actionsHTML = '';
+            if (canGoBack) {
+                actionsHTML += `<button class="order-btn back" onclick="event.stopPropagation(); moveOrder('${order.orderId}', -1)">← Back</button>`;
+            }
+            if (canAdvance) {
+                actionsHTML += `<button class="order-btn advance" onclick="event.stopPropagation(); moveOrder('${order.orderId}', 1)">${NEXT_ACTION[order.status]}</button>`;
+            }
+            // Prominent Cancel Button
+            actionsHTML += `<button class="order-btn delete" onclick="event.stopPropagation(); confirmDelete('${order.orderId}')">Cancel Order</button>`;
+
+            // Extract plan brief
+            let planBrief = order.items;
+            const kcalMatch = order.items.match(/(\d+)\s*kcal/i);
+            if (kcalMatch) {
+                planBrief = kcalMatch[1] + ' kcal';
+            }
+            if (order.items.includes('BYOB')) planBrief = 'BYOB Box';
+
+            div.innerHTML = `
+                <div class="order-card-header">
+                    <span class="order-id">${order.orderId}</span>
+                    <span class="order-time">${order.timestamp}</span>
+                </div>
+                <div class="order-customer">${order.name}</div>
+                <div class="order-phone">📞 <a href="tel:${order.phone}">${order.phone}</a> · <strong>${planBrief}</strong></div>
+                ${!isExpanded ? `<div class="order-total" style="font-size:0.95rem;">₱${order.total.toLocaleString()}</div>` : ''}
+                ${tagsHTML ? `<div class="order-tags">${tagsHTML}</div>` : ''}
+                <button class="order-expand-btn" onclick="toggleExpand('${order.orderId}')">${isExpanded ? '▲ Hide Details' : '▼ Show Details'}</button>
+                ${detailsHTML}
+                <div class="order-actions">${actionsHTML}</div>
+            `;
+
+            return div;
+        }
+
+        // ==================== ACTIONS ====================
+        function moveOrder(orderId, direction) {
+            const orderIdx = orders.findIndex(o => o.orderId === orderId);
+            if (orderIdx === -1) return;
+            const order = orders[orderIdx];
+            
+            const currentIdx = STATUS_FLOW.indexOf(order.status);
+            const newIdx = currentIdx + direction;
+            if (newIdx < 0 || newIdx >= STATUS_FLOW.length) return;
+
+            order.status = STATUS_FLOW[newIdx];
+            saveOrders();
+            renderBoard();
+            
+            // Sync status update to Google Sheets (Async)
+            updateOrderOnSheet(order);
+            
+            showToast(`${order.name} → ${STATUS_LABELS[order.status]}`);
+        }
+
+        function toggleExpand(orderId) {
+            if (expandedCards.has(orderId)) {
+                expandedCards.delete(orderId);
+            } else {
+                expandedCards.add(orderId);
+            }
+            renderBoard();
+        }
+
+        function setFilter(filter, chipEl) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+            chipEl.classList.add('active');
+            renderBoard();
+        }
+
+
+        // ==================== ADD ORDER ====================
+        function openAddModal() {
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function closeAddModal() {
+            document.getElementById('add-modal').classList.remove('active');
+        }
+
+        // ==================== DELETE ORDER ====================
+        let orderIdToDelete = null;
+
+        function confirmDelete(orderId) {
+            orderIdToDelete = orderId;
+            document.getElementById('delete-confirm-modal').classList.add('active');
+            
+            // Re-bind click to current order
+            document.getElementById('confirm-delete-btn').onclick = function() {
+                executeDelete();
+            };
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('delete-confirm-modal').classList.remove('active');
+            orderIdToDelete = null;
+        }
+
+        function executeDelete() {
+            if (!orderIdToDelete) return;
+            
+            const orderIdx = orders.findIndex(o => o.orderId === orderIdToDelete);
+            if (orderIdx === -1) return;
+            
+            const deletedOrder = orders[orderIdx];
+            
+            // Sync cancellation to Google Sheets (mark as cancelled, not deleted)
+            deletedOrder.status = 'cancelled';
+            updateOrderOnSheet(deletedOrder);
+            
+            orders.splice(orderIdx, 1);
+            saveOrders();
+            renderBoard();
+            closeDeleteModal();
+            showToast(`Order ${deletedOrder.orderId} cancelled & synced.`);
+        }
+
+        function generateOrderId() {
+            const now = new Date();
+            const date = now.getFullYear().toString() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
+            const seq = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
+            return `SWK-${date}-${seq}`;
+        }
+
+        function getDaysFromPlan(planStr) {
+            if (planStr.includes('5-Day')) return 5;
+            if (planStr.includes('7-Day')) return 7;
+            if (planStr.includes('2-Week')) return 14;
+            if (planStr.includes('1-Month')) return 28;
+            return 1;
+        }
+
+        function submitNewOrder() {
+            const name = document.getElementById('add-name').value.trim();
+            const phone = document.getElementById('add-phone').value.trim();
+            const email = document.getElementById('add-email').value.trim() || 'N/A';
+            const plan = document.getElementById('add-plan').value;
+            const address = document.getElementById('add-address').value.trim();
+            const area = document.getElementById('add-area').value;
+            const payment = document.getElementById('add-payment').value;
+            const allergies = document.getElementById('add-allergies').value.trim() || 'None';
+
+            // Validation
+            if (!name || !phone || !address || !area) {
+                showToast('Please fill in all required fields!');
+                return;
+            }
+
+            const subtotal = priceLookup[plan] || 0;
+            const feePerDay = deliveryFeeMap[area] || 0;
+            const days = getDaysFromPlan(plan);
+            const deliveryFee = feePerDay * days;
+            const total = subtotal + deliveryFee;
+
+            const newOrder = {
+                orderId: generateOrderId(),
+                timestamp: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }),
+                name, phone, email, address, area,
+                items: plan,
+                subtotal, deliveryFee, total,
+                payment, allergies,
+                status: 'pending',
+                source: document.getElementById('add-source').value
+            };
+
+            orders.unshift(newOrder);
+            saveOrders();
+            renderBoard();
+            closeAddModal();
+            showToast(`Order ${newOrder.orderId} added!`);
+
+            // Sync new order to Google Sheets
+            try {
+                fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newOrder)
+                });
+            } catch (err) {
+                console.error('Sheet sync error:', err);
+            }
+
+            // Clear form
+            document.getElementById('add-name').value = '';
+            document.getElementById('add-phone').value = '';
+            document.getElementById('add-email').value = '';
+            document.getElementById('add-address').value = '';
+            document.getElementById('add-allergies').value = '';
+        }
+
+        // ==================== DARK MODE ====================
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.getElementById('dark-toggle').innerText = isDark ? '☀️' : '🌙';
+            localStorage.setItem('swaktorie_hub_dark', isDark ? '1' : '0');
+        }
+
+        // ==================== TOAST ====================
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 2800);
+        }
+
+        // ==================== NOTIFICATION WORKER ====================
+        let notificationsEnabled = false;
+        let lastOrderCount = 0;
+        let notifInterval = null;
+
+        // Generate notification beep using Web Audio API
+        function playNotifSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.value = 880;
+                gain.gain.value = 0.3;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                osc.stop(ctx.currentTime + 0.5);
+                // Second beep
+                setTimeout(() => {
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.type = 'sine';
+                    osc2.frequency.value = 1100;
+                    gain2.gain.value = 0.3;
+                    osc2.start();
+                    gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc2.stop(ctx.currentTime + 0.4);
+                }, 200);
+            } catch(e) { /* Audio not supported */ }
+        }
+
+        function toggleNotifications() {
+            notificationsEnabled = !notificationsEnabled;
+            const btn = document.getElementById('notif-toggle');
+            if (notificationsEnabled) {
+                btn.classList.add('has-alert');
+                lastOrderCount = orders.length;
+                // Request browser notification permission
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+                // Start polling worker (checks every 30s for new orders via Sheets)
+                startNotifWorker();
+                showToast('🔔 Notifications ON — you\'ll hear alerts for new orders!');
+            } else {
+                btn.classList.remove('has-alert');
+                stopNotifWorker();
+                showToast('🔕 Notifications OFF');
+            }
+            localStorage.setItem('swaktorie_hub_notif', notificationsEnabled ? '1' : '0');
+        }
+
+        function startNotifWorker() {
+            if (notifInterval) clearInterval(notifInterval);
+            notifInterval = setInterval(() => {
+                if (!notificationsEnabled) return;
+
+                // Check for new orders (from Sheets sync or other tabs)
+                const saved = localStorage.getItem('swaktorie_orders');
+                if (saved) {
+                    try {
+                        const current = JSON.parse(saved);
+                        if (current.length > lastOrderCount) {
+                            const newCount = current.length - lastOrderCount;
+                            const latestOrder = current[0];
+                            notifyStaff(newCount, latestOrder);
+                            lastOrderCount = current.length;
+                            orders = current;
+                            renderBoard();
+                        }
+                    } catch(e) {}
+                }
+
+                // If Sheets URL is configured, also poll from there
+                if (GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                    fetch(GOOGLE_SHEETS_URL)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (Array.isArray(data)) {
+                                let newAdded = 0;
+                                data.forEach(row => {
+                                    const exists = orders.find(o => o.orderId === row.orderId);
+                                    if (!exists) {
+                                        row.status = row.status || 'pending';
+                                        row.source = row.source || 'website';
+                                        orders.unshift(row);
+                                        newAdded++;
+                                    }
+                                });
+                                if (newAdded > 0) {
+                                    saveOrders();
+                                    renderBoard();
+                                    notifyStaff(newAdded, orders[0]);
+                                    lastOrderCount = orders.length;
+                                }
+                            }
+                        })
+                        .catch(() => {});
+                }
+            }, 30000); // Poll every 30 seconds
+        }
+
+        function stopNotifWorker() {
+            if (notifInterval) { clearInterval(notifInterval); notifInterval = null; }
+        }
+
+        function notifyStaff(count, latestOrder) {
+            // Play sound
+            playNotifSound();
+
+            // Show banner
+            const banner = document.getElementById('notif-banner');
+            const msg = document.getElementById('notif-banner-msg');
+            const srcLabel = { website: 'Website', facebook: 'Facebook', phone: 'Phone', walkin: 'Walk-in' };
+            msg.innerText = `🔔 ${count} new order${count > 1 ? 's' : ''}! Latest: ${latestOrder.name} via ${srcLabel[latestOrder.source] || 'Website'} — ₱${latestOrder.total.toLocaleString()}`;
+            banner.classList.add('active');
+
+            // Browser notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Swaktorie Order Hub', {
+                    body: `${count} new order${count > 1 ? 's' : ''}! ${latestOrder.name} — ₱${latestOrder.total.toLocaleString()}`,
+                    icon: '🛒'
+                });
+            }
+
+            // Auto-dismiss banner after 10s
+            setTimeout(() => banner.classList.remove('active'), 10000);
+        }
+
+        function dismissNotifBanner() {
+            document.getElementById('notif-banner').classList.remove('active');
+        }
+
+        // ==================== BOOT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Restore dark mode preference
+            if (localStorage.getItem('swaktorie_hub_dark') === '1') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('dark-toggle').innerText = '☀️';
+            }
+            // Restore notification preference
+            if (localStorage.getItem('swaktorie_hub_notif') === '1') {
+                notificationsEnabled = true;
+                document.getElementById('notif-toggle').classList.add('has-alert');
+            }
+            init();
+            lastOrderCount = orders.length;
+            if (notificationsEnabled) startNotifWorker();
+        });
+
+        // Listen for message from Parent Hub
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'toggleDarkMode') {
+                if (event.data.isDark) {
+                    document.body.classList.add('dark-mode');
+                    document.getElementById('dark-toggle').innerText = '☀️';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    document.getElementById('dark-toggle').innerText = '🌙';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

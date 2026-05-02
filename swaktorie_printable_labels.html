@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaktorie Meals - Printable Labels</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --emerald: #059669;
+            --emerald-dark: #064e3b;
+            --terracotta: #B45309;
+            --cream: #F8FAF6;
+            --slate: #1e293b;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            color: var(--slate);
+        }
+
+        .dark-mode {
+            background: #0b1120;
+        }
+        .dark-mode .a4-sheet {
+            background: #1e293b;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        .dark-mode .label-card {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        .dark-mode .write-line {
+            border-bottom-color: #64748b;
+        }
+
+        .a4-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            padding: 12mm 10mm;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 8mm;
+            align-content: stretch;
+        }
+
+        .label-card {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            background: var(--cream);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .label-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1.5px solid rgba(5, 150, 105, 0.15);
+        }
+
+        .logo-img {
+            height: 40px;
+            mix-blend-mode: multiply;
+        }
+
+        .brand-name {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name img {
+            height: 22px;
+            mix-blend-mode: multiply;
+        }
+
+        .banner {
+            background: var(--emerald-dark);
+            color: white;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            padding: 3px 0;
+            border-radius: 4px;
+            margin-top: -2px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .form-row {
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--emerald-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .write-line {
+            border-bottom: 1.5px solid var(--slate);
+            height: 18px;
+            width: 100%;
+        }
+
+        .checkbox-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .circle {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid var(--emerald);
+            border-radius: 50%;
+            background: white;
+        }
+
+        .square {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid var(--terracotta);
+            border-radius: 3px;
+            background: white;
+        }
+
+        .footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--emerald-dark);
+            border-top: 1.5px solid rgba(5, 150, 105, 0.15);
+            padding-top: 8px;
+        }
+
+        .qr-placeholder {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        @media print {
+            body { 
+                background: white; 
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .a4-sheet { 
+                box-shadow: none; 
+                padding: 10mm;
+            }
+            .label-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border: 1px dotted #94a3b8; /* Lighter border for actual printing cut lines */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="a4-sheet" id="sheet">
+        <!-- JS Injected Labels -->
+    </div>
+
+    <script>
+        const sheet = document.getElementById('sheet');
+        let html = '';
+        
+        // 8 labels per A4 page (4 rows, 2 columns) for spacious handwriting area
+        for(let i=0; i<8; i++) {
+            html += `
+            <div class="label-card">
+                <div class="label-header">
+                    <img src="swaktorie_logo_v4.png" alt="Icon" class="logo-img">
+                    <div class="brand-name">
+                        <img src="swaktorie_logo_text_v6.png" alt="Swaktorie Meals">
+                    </div>
+                </div>
+
+                <div class="banner">Freshly Cooked • Delivered Daily</div>
+
+                <div class="form-row">
+                    <span class="form-label">Dish Name</span>
+                    <div class="write-line"></div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                    <div style="flex: 1;">
+                        <span class="form-label">Day</span>
+                        <div class="checkbox-grid" style="gap: 5px 6px;">
+                            <div class="check-item"><div class="circle"></div> M</div>
+                            <div class="check-item"><div class="circle"></div> T</div>
+                            <div class="check-item"><div class="circle"></div> W</div>
+                            <div class="check-item"><div class="circle"></div> Th</div>
+                            <div class="check-item"><div class="circle"></div> F</div>
+                            <div class="check-item"><div class="circle"></div> Sa</div>
+                            <div class="check-item"><div class="circle"></div> Su</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <span class="form-label">Meal Type</span>
+                    <div class="checkbox-grid">
+                        <div class="check-item"><div class="square"></div> Breakfast</div>
+                        <div class="check-item"><div class="square"></div> Lunch</div>
+                        <div class="check-item"><div class="square"></div> Dinner</div>
+                        <div class="check-item"><div class="square"></div> Snack</div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <span>❄️ Keep Refrigerated</span>
+                    <span style="display: flex; align-items: center; gap: 4px;">
+                        <span class="qr-placeholder">🔳</span> scan to order
+                    </span>
+                </div>
+            </div>`;
+        }
+        sheet.innerHTML = html;
+
+        // Listen for message from Parent Hub
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'toggleDarkMode') {
+                if (event.data.isDark) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
